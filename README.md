@@ -1,5 +1,16 @@
 # Team dino
 
+## Changing content of the repository
+
+
+
+## Changing content of the repository
+
+1. create a new feature branch
+2. push changes
+3. open pull request
+4. merge
+
 ## basis
 
 ### frontend
