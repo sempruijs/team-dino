@@ -1,6 +1,8 @@
 use dotenv::dotenv;
 use sqlx::postgres::PgPoolOptions;
 use std::env;
+use uuid::Uuid;
+use chrono::NaiveDate;
 
 use crate::routes::*;
 pub mod db;
@@ -8,12 +10,22 @@ pub mod handlers;
 
 pub mod routes;
 
-//TODO: make age u32
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
-struct User {
-    name: String,
-    age: i32,
-    email: String,
+#[derive(Debug, Serialize, Deserialize, FromRow, DeserializeOwned)]
+pub struct User {
+    pub user_id: Uuid,           // Primary key for the user
+    pub name: String,
+    pub date_of_birth: NaiveDate,
+    pub email: String,
+    pub license_plate: Vec<String>, // Store as JSONB in PostgreSQL
+}
+
+#[derive(Debug, Serialize, Deserialize, FromRow, DeserializeOwned)]
+pub struct Ticket {
+    pub ticket_id: Uuid,          // Primary key for the ticket
+    pub user_id: Uuid,            // Foreign key referencing the user
+    pub start_date: NaiveDate,
+    pub end_date: NaiveDate,
+    pub house_number: u32,
 }
 
 #[tokio::main]
