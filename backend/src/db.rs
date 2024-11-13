@@ -31,3 +31,22 @@ pub async fn create_ticket(pool: &PgPool, t: Ticket) -> Result<(), sqlx::Error> 
 
     Ok(())
 }
+
+pub async fn check_license_plate(pool: &PgPool, plate: &str) -> Result<bool, sqlx::Error> {
+    let result = sqlx::query!(
+        r#"
+        SELECT user_id 
+        FROM users 
+        WHERE $1 = ANY(
+            SELECT jsonb_array_elements_text(license_plate) 
+            FROM users 
+            WHERE user_id = users.user_id
+        )"#,
+        plate
+    )
+    .fetch_optional(pool)
+    .await?;
+
+    println!("Check license plate");
+    Ok(result.is_some()) // If the result is some, the plate exists in the database
+}

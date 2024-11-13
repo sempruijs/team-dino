@@ -30,3 +30,9 @@ curl -X POST http://localhost:3030/create_ticket \
            "house_number": 42
          }'
 ```
+
+### Check if license plate exists
+
+```bash
+curl -X GET "http://localhost:3030/check_license_plate/ABC123"
+```
