@@ -9,7 +9,7 @@ pub async fn create_user(pool: &PgPool, u: User) -> Result<(), sqlx::Error> {
         u.name,
         u.date_of_birth,
         u.email,
-        serde_json::to_value(&u.license_plate)?,
+        serde_json::to_value(&u.license_plate).expect("problem formatting licenseplate vector."),
     )
     .execute(pool)
     .await?;
@@ -24,7 +24,7 @@ pub async fn create_ticket(pool: &PgPool, t: Ticket) -> Result<(), sqlx::Error> 
         t.user_id,
         t.start_date,
         t.end_date,
-        t.house_number,
+        t.house_number as i32,
     )
     .execute(pool)
     .await?;

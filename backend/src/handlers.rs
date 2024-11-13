@@ -1,8 +1,8 @@
 use crate::db::*;
-use crate::User;
-use crate::ticket;
+use crate::{User, Ticket};
 use sqlx::PgPool;
 use warp::http::StatusCode;
+use chrono::Utc;
 
 fn current_time_iso8601() -> String {
     Utc::now().to_rfc3339()
@@ -31,8 +31,7 @@ pub async fn create_ticket_handler(
     match create_ticket(&pool, ticket).await {
         Ok(_) => Ok(StatusCode::CREATED),
         Err(_) => {
-            eprintln!("Error while creating ticket");
-            Err(warp::reject::custom(InternalError)) // Custom error handling
+            panic!("Error while creating ticket");
         }
     }
 }

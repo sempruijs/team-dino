@@ -22,8 +22,8 @@ pub async fn serve_routes(pool: PgPool) {
     let create_ticket = warp::post()
         .and(warp::path("create_ticket"))
         .and(warp::body::json()) // Accept JSON body for ticket
-        .and(warp::any().map(move || pool.clone())) // Pass the database pool to the handler
-        .and_then(create_ticket_handler)
+        .and(pool_filter.clone())
+        .and_then(create_ticket_handler);
 
     // Combine all the routes
     let routes = create_user

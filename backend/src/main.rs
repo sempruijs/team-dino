@@ -3,6 +3,8 @@ use sqlx::postgres::PgPoolOptions;
 use std::env;
 use uuid::Uuid;
 use chrono::NaiveDate;
+use serde::{Serialize, Deserialize};
+use sqlx::FromRow;
 
 use crate::routes::*;
 pub mod db;
@@ -10,7 +12,7 @@ pub mod handlers;
 
 pub mod routes;
 
-#[derive(Debug, Serialize, Deserialize, FromRow, DeserializeOwned)]
+#[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct User {
     pub user_id: Uuid,           // Primary key for the user
     pub name: String,
@@ -19,7 +21,7 @@ pub struct User {
     pub license_plate: Vec<String>, // Store as JSONB in PostgreSQL
 }
 
-#[derive(Debug, Serialize, Deserialize, FromRow, DeserializeOwned)]
+#[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Ticket {
     pub ticket_id: Uuid,          // Primary key for the ticket
     pub user_id: Uuid,            // Foreign key referencing the user
