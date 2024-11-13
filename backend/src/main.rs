@@ -30,6 +30,16 @@ pub struct Ticket {
     pub house_number: u32,
 }
 
+#[derive(Serialize)]
+pub struct LicensePlateResponse {
+    pub exists: bool,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct LicensePlateRequest {
+    pub license_plate: String,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
     dotenv().ok();

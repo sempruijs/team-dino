@@ -35,3 +35,21 @@ pub async fn create_ticket_handler(
         }
     }
 }
+
+pub async fn check_license_plate_handler(
+    plate: String, // Assuming you have a struct LicensePlateRequest for deserialization
+    pool: PgPool,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    match check_license_plate(&pool, &plate).await {
+        Ok(exists) => {
+            if exists {
+                Ok(warp::reply::json(&true)) // If plate exists, return true
+            } else {
+                Ok(warp::reply::json(&false)) // If plate does not exist, return false
+            }
+        }
+        Err(e) => {
+            panic!("Error checking license plate: {}", e);
+        }
+    }
+}
