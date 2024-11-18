@@ -1,12 +1,15 @@
 querries for the sql database:
 
 -- users table
+
 CREATE TABLE users (
     user_id UUID PRIMARY KEY,
     name TEXT NOT NULL,
     date_of_birth DATE NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    license_plate JSONB
+    license_plate JSONB NOT NULL CHECK (
+        jsonb_typeof(license_plate) = 'array' 
+    )
 );
 
 -- tickets table
