@@ -14,20 +14,26 @@ pub mod routes;
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct User {
-    pub user_id: Uuid, // Primary key for the user
+    pub user_id: Uuid,
     pub name: String,
     pub date_of_birth: NaiveDate,
     pub email: String,
-    pub license_plate: Vec<String>, // Store as JSONB in PostgreSQL
 }
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Ticket {
-    pub ticket_id: Uuid, // Primary key for the ticket
-    pub user_id: Uuid,   // Foreign key referencing the user
+    pub ticket_id: Uuid,
+    pub user_id: Uuid,
     pub start_date: NaiveDate,
     pub end_date: NaiveDate,
-    pub house_number: u32,
+    pub house_number: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct LicensePlate {
+    pub plate_id: i32,
+    pub user_id: Uuid,
+    pub license_plate: String,
 }
 
 #[derive(Serialize)]
