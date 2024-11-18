@@ -1,52 +1,57 @@
+use crate::LicensePlate;
 use crate::Ticket;
 use crate::User;
 use sqlx::PgPool;
+use uuid::Uuid;
 
-pub async fn create_user(pool: &PgPool, u: User) -> Result<(), sqlx::Error> {
+pub async fn create_user(pool: &PgPool, user: User) -> Result<(), sqlx::Error> {
     sqlx::query!(
-        "INSERT INTO users (user_id, name, date_of_birth, email, license_plate) VALUES ($1, $2, $3, $4, $5)",
-        u.user_id,
-        u.name,
-        u.date_of_birth,
-        u.email,
-        serde_json::to_value(&u.license_plate).expect("problem formatting licenseplate vector."),
+        "INSERT INTO users (user_id, name, date_of_birth, email)
+         VALUES ($1, $2, $3, $4)",
+        user.user_id,
+        user.name,
+        user.date_of_birth,
+        user.email
     )
     .execute(pool)
     .await?;
-
     Ok(())
 }
 
-pub async fn create_ticket(pool: &PgPool, t: Ticket) -> Result<(), sqlx::Error> {
+pub async fn create_ticket(pool: &PgPool, ticket: Ticket) -> Result<(), sqlx::Error> {
     sqlx::query!(
-        "INSERT INTO tickets (ticket_id, user_id, start_date, end_date, house_number) VALUES ($1, $2, $3, $4, $5)",
-        t.ticket_id,
-        t.user_id,
-        t.start_date,
-        t.end_date,
-        t.house_number as i32,
+        "INSERT INTO tickets (ticket_id, user_id, start_date, end_date, house_number)
+         VALUES ($1, $2, $3, $4, $5)",
+        ticket.ticket_id,
+        ticket.user_id,
+        ticket.start_date,
+        ticket.end_date,
+        ticket.house_number
     )
     .execute(pool)
     .await?;
-
     Ok(())
 }
 
-pub async fn check_license_plate(pool: &PgPool, plate: &str) -> Result<bool, sqlx::Error> {
-    let result = sqlx::query!(
-        r#"
-        SELECT user_id 
-        FROM users 
-        WHERE $1 = ANY(
-            SELECT jsonb_array_elements_text(license_plate) 
-            FROM users 
-            WHERE user_id = users.user_id
-        )"#,
-        plate
+pub async fn get_user_by_id(pool: &PgPool, user_id: Uuid) -> Result<Option<User>, sqlx::Error> {
+    let user = sqlx::query_as!(
+        User,
+        "SELECT user_id, name, date_of_birth, email
+         FROM users
+         WHERE user_id = $1",
+        user_id
     )
     .fetch_optional(pool)
     .await?;
+    Ok(user)
+}
 
-    println!("Check license plate");
-    Ok(result.is_some()) // If the result is some, the plate exists in the database
+pub async fn check_license_plate(pool: &PgPool, plate: &str) -> Result<bool, sqlx::Error> {
+    let exists = sqlx::query_scalar!(
+        "SELECT EXISTS (SELECT 1 FROM license_plates WHERE license_plate = $1)",
+        plate
+    )
+    .fetch_one(pool)
+    .await?;
+    Ok(exists.expect("Problem with checking if license plate exists or not."))
 }

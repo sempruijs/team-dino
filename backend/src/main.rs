@@ -40,9 +40,14 @@ pub struct LicensePlate {
 pub struct LicensePlateResponse {
     pub exists: bool,
 }
-
 #[derive(Debug, Deserialize, Serialize)]
 pub struct LicensePlateRequest {
+    pub license_plate: String,
+}
+
+#[derive(Deserialize)]
+pub struct CreateLicensePlateRequest {
+    pub user_id: Uuid,
     pub license_plate: String,
 }
 

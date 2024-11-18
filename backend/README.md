@@ -6,15 +6,13 @@ Here are some examples how you can use the api with curl:
 
 ```bash
 curl -X POST http://localhost:3030/users \
-     -H "Content-Type: application/json" \
-     -d '{
-           "user_id": "123e4567-e89b-12d3-a456-426614174000",        
-           "name": "John Doe",
-           "email": "johndoe@example.com",
-           "date_of_birth": "1990-01-01",
-           "license_plate": ["ABC123", "XYZ789"],
-           "tickets": []
-         }'
+    -H "Content-Type: application/json" \
+    -d '{
+        "user_id": "123e4567-e89b-12d3-a456-426614174000",
+        "name": "John Doe",
+        "email": "johndoe@example.com",
+        "date_of_birth": "1990-01-01"
+    }'
 ```
 
 ### create ticket
