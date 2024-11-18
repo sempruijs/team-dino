@@ -8,7 +8,8 @@ CREATE TABLE users (
     date_of_birth DATE NOT NULL,
     email TEXT UNIQUE NOT NULL,
     license_plate JSONB NOT NULL CHECK (
-        jsonb_typeof(license_plate) = 'array' 
+        jsonb_typeof(license_plate) = 'array' AND
+        jsonb_array_length(license_plate) >= 0
     )
 );
 

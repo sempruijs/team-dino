@@ -36,3 +36,16 @@ curl -X POST http://localhost:3030/create_ticket \
 ```bash
 curl -X GET "http://localhost:3030/check_license_plate/ABC123"
 ```
+
+
+### Get user by uuid
+
+```bash
+curl -X GET http://localhost:3030/get_user/<UUID>
+```
+
+So with an example user:
+
+```bash
+curl -X GET http://localhost:3030/get_user/123e4567-e89b-12d3-a456-426614174000
+```

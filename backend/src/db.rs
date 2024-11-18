@@ -50,27 +50,3 @@ pub async fn check_license_plate(pool: &PgPool, plate: &str) -> Result<bool, sql
     println!("Check license plate");
     Ok(result.is_some()) // If the result is some, the plate exists in the database
 }
-
-pub async fn get_user_by_id(
-    pool: &PgPool,
-    user_id: uuid::Uuid,
-) -> Result<Option<User>, sqlx::Error> {
-    let result = sqlx::query_as!(
-        User,
-        r#"
-        SELECT 
-            user_id, 
-            name, 
-            email, 
-            date_of_birth, 
-            license_plate AS "license_plate: Vec<String>"
-        FROM users
-        WHERE user_id = $1
-        "#,
-        user_id
-    )
-    .fetch_optional(pool)
-    .await;
-
-    result
-}
