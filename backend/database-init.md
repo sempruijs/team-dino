@@ -1,23 +1,23 @@
-querries for the sql database:
-
 -- users table
-
 CREATE TABLE users (
     user_id UUID PRIMARY KEY,
     name TEXT NOT NULL,
     date_of_birth DATE NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    license_plate JSONB NOT NULL CHECK (
-        jsonb_typeof(license_plate) = 'array' AND
-        jsonb_array_length(license_plate) >= 0
-    )
+    email TEXT UNIQUE NOT NULL
 );
 
 -- tickets table
 CREATE TABLE tickets (
     ticket_id UUID PRIMARY KEY,
-    user_id UUID REFERENCES users(user_id),
+    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    house_number INTEGER NOT NULL CHECK (house_number >= 0)
+    house_number INTEGER NOT NULL
+);
+
+-- license plate table
+CREATE TABLE license_plates (
+    plate_id SERIAL PRIMARY KEY,
+    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
+    license_plate TEXT NOT NULL UNIQUE
 );
