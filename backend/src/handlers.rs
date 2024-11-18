@@ -1,8 +1,8 @@
 use crate::db::*;
-use crate::{User, Ticket};
+use crate::{Ticket, User};
+use chrono::Utc;
 use sqlx::PgPool;
 use warp::http::StatusCode;
-use chrono::Utc;
 
 fn current_time_iso8601() -> String {
     Utc::now().to_rfc3339()
@@ -26,7 +26,10 @@ pub async fn create_ticket_handler(
     pool: PgPool,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     let now = current_time_iso8601(); // Assuming this function returns the current time as ISO8601
-    println!("New ticket created for user_id: {}  ({})", ticket.user_id, now);
+    println!(
+        "New ticket created for user_id: {}  ({})",
+        ticket.user_id, now
+    );
 
     match create_ticket(&pool, ticket).await {
         Ok(_) => Ok(StatusCode::CREATED),
