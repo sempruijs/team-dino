@@ -1,10 +1,10 @@
+use chrono::NaiveDate;
 use dotenv::dotenv;
+use serde::{Deserialize, Serialize};
 use sqlx::postgres::PgPoolOptions;
+use sqlx::FromRow;
 use std::env;
 use uuid::Uuid;
-use chrono::NaiveDate;
-use serde::{Serialize, Deserialize};
-use sqlx::FromRow;
 
 use crate::routes::*;
 pub mod db;
@@ -14,7 +14,7 @@ pub mod routes;
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct User {
-    pub user_id: Uuid,           // Primary key for the user
+    pub user_id: Uuid, // Primary key for the user
     pub name: String,
     pub date_of_birth: NaiveDate,
     pub email: String,
@@ -23,8 +23,8 @@ pub struct User {
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Ticket {
-    pub ticket_id: Uuid,          // Primary key for the ticket
-    pub user_id: Uuid,            // Foreign key referencing the user
+    pub ticket_id: Uuid, // Primary key for the ticket
+    pub user_id: Uuid,   // Foreign key referencing the user
     pub start_date: NaiveDate,
     pub end_date: NaiveDate,
     pub house_number: u32,
