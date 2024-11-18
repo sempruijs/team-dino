@@ -1,8 +1,11 @@
 use crate::db::*;
 use crate::{Ticket, User};
 use chrono::Utc;
+use serde_json::json;
 use sqlx::PgPool;
 use warp::http::StatusCode;
+use warp::Rejection;
+use warp::Reply;
 
 fn current_time_iso8601() -> String {
     Utc::now().to_rfc3339()
@@ -56,3 +59,27 @@ pub async fn check_license_plate_handler(
         }
     }
 }
+
+// pub async fn get_user_handler(user_id: uuid::Uuid, pool: PgPool) -> Result<impl Reply, Rejection> {
+//     match get_user_by_id(&pool, user_id).await {
+//         Ok(Some(user)) => {
+//             // Return the found user with a 200 status code.
+//             Ok(warp::reply::with_status(
+//                 warp::reply::json(&user),
+//                 StatusCode::OK,
+//             ))
+//         }
+//         Ok(None) => Ok(warp::reply::with_status(
+//             warp::reply::json(&json!({"error": "User not found"})),
+//             StatusCode::NOT_FOUND,
+//         )),
+//         Err(err) => {
+//             eprintln!("Database error: {}", err);
+//             // Return a 500 Internal Server Error for database errors.
+//             Ok(warp::reply::with_status(
+//                 warp::reply::json(&json!({"error": "Internal server error"})),
+//                 StatusCode::INTERNAL_SERVER_ERROR,
+//             ))
+//         }
+//     }
+// }
