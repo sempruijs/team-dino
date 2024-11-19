@@ -18,6 +18,6 @@ CREATE TABLE tickets (
 -- license plate table
 CREATE TABLE license_plates (
     plate_id SERIAL PRIMARY KEY,
-    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     license_plate TEXT NOT NULL UNIQUE
 );

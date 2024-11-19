@@ -62,3 +62,22 @@ pub async fn check_license_plate_handler(
         }
     }
 }
+
+pub async fn create_license_plate_handler(
+    request: CreateLicensePlateRequest,
+    pool: PgPool,
+) -> Result<impl Reply, Rejection> {
+    match create_license_plate(&pool, request.user_id, request.license_plate).await {
+        Ok(_) => Ok(warp::reply::with_status(
+            warp::reply::json(&json!({"message": "License plate created successfully"})),
+            StatusCode::CREATED,
+        )),
+        Err(err) => {
+            eprintln!("Database error: {}", err);
+            Ok(warp::reply::with_status(
+                warp::reply::json(&json!({"error": "Failed to create license plate"})),
+                StatusCode::INTERNAL_SERVER_ERROR,
+            ))
+        }
+    }
+}
