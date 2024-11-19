@@ -47,3 +47,15 @@ So with an example user:
 ```bash
 curl -X GET http://localhost:3030/get_user/123e4567-e89b-12d3-a456-426614174000
 ```
+
+
+### Add a license plate to a user
+
+```bash
+curl -X POST http://localhost:3030/license_plates \
+     -H "Content-Type: application/json" \
+     -d '{
+           "user_id": "123e4567-e89b-12d3-a456-426614174000",
+           "license_plate": "ABC123"
+         }'
+```

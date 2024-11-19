@@ -55,3 +55,22 @@ pub async fn check_license_plate(pool: &PgPool, plate: &str) -> Result<bool, sql
     .await?;
     Ok(exists.expect("Problem with checking if license plate exists or not."))
 }
+
+pub async fn create_license_plate(
+    pool: &PgPool,
+    user_id: Uuid,
+    license_plate: String,
+) -> Result<(), sqlx::Error> {
+    sqlx::query!(
+        r#"
+        INSERT INTO license_plates (user_id, license_plate)
+        VALUES ($1, $2)
+        "#,
+        user_id,
+        license_plate
+    )
+    .execute(pool)
+    .await?;
+
+    Ok(())
+}
