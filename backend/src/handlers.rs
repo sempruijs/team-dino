@@ -11,10 +11,6 @@ use warp::http::StatusCode;
 use warp::Rejection;
 use warp::Reply;
 
-fn current_time_iso8601() -> String {
-    Utc::now().to_rfc3339()
-}
-
 pub async fn create_user_handler(
     user: User,
     pool: PgPool,
