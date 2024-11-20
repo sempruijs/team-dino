@@ -60,6 +60,6 @@ pub async fn serve_routes(pool: PgPool) {
         .or(create_card)
         .with(cors);
 
-    println!("Starting server");
+    println!("Running on port 3030...");
     warp::serve(routes).run(([0, 0, 0, 0], 3030)).await;
 }
