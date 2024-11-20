@@ -52,6 +52,12 @@ pub struct CreateLicensePlateRequest {
     user_id: Uuid,
     license_plate: String,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct CreateCardRequest {
+    user_id: Uuid,
+    card_id: String,
+}
 #[derive(Debug, Deserialize, Serialize)]
 pub struct LicensePlateRequest {
     pub license_plate: String,

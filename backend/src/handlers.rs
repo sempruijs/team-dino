@@ -1,4 +1,5 @@
 use crate::db::*;
+use crate::CreateCardRequest;
 use crate::CreateLicensePlateRequest;
 use crate::LicensePlateRequest;
 use crate::{Ticket, User};
@@ -76,6 +77,25 @@ pub async fn create_license_plate_handler(
             eprintln!("Database error: {}", err);
             Ok(warp::reply::with_status(
                 warp::reply::json(&json!({"error": "Failed to create license plate"})),
+                StatusCode::INTERNAL_SERVER_ERROR,
+            ))
+        }
+    }
+}
+
+pub async fn create_card_handler(
+    request: CreateCardRequest,
+    pool: PgPool,
+) -> Result<impl Reply, Rejection> {
+    match create_card(&pool, request.user_id, request.card_id).await {
+        Ok(_) => Ok(warp::reply::with_status(
+            warp::reply::json(&json!({"message": "Card created successfully"})),
+            StatusCode::CREATED,
+        )),
+        Err(err) => {
+            eprintln!("Database error: {}", err);
+            Ok(warp::reply::with_status(
+                warp::reply::json(&json!({"error": "Failed to create card"})),
                 StatusCode::INTERNAL_SERVER_ERROR,
             ))
         }
