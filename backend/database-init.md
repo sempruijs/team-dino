@@ -21,3 +21,10 @@ CREATE TABLE license_plates (
     user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     license_plate TEXT NOT NULL UNIQUE
 );
+
+-- create cards table
+CREATE TABLE cards (
+    id SERIAL PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    card_id TEXT NOT NULL UNIQUE
+);
