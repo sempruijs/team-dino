@@ -1,7 +1,9 @@
+use crate::handlers::card::*;
+use crate::handlers::license_plate::*;
+use crate::handlers::ticket::*;
+use crate::handlers::user::*;
 use sqlx::PgPool;
 use warp::Filter;
-
-use crate::handlers::*;
 
 pub async fn serve_routes(pool: PgPool) {
     // Clone the pool to share it across routes

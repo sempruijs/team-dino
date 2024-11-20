@@ -1,4 +1,4 @@
-mod card;
-mod license_plate;
-mod ticket;
-mod user;
+pub mod card;
+pub mod license_plate;
+pub mod ticket;
+pub mod user;
