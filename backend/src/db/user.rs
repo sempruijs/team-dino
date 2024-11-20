@@ -1,3 +1,7 @@
+use crate::types::user::*;
+use sqlx::types::Uuid;
+use sqlx::PgPool;
+
 pub async fn create_user(pool: &PgPool, user: User) -> Result<(), sqlx::Error> {
     sqlx::query!(
         "INSERT INTO users (user_id, name, date_of_birth, email)

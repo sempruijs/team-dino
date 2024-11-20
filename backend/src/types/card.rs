@@ -9,6 +9,6 @@ pub struct Card {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CreateCardRequest {
-    user_id: Uuid,
-    card_id: String,
+    pub user_id: Uuid,
+    pub card_id: String,
 }

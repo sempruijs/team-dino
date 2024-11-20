@@ -16,8 +16,8 @@ pub struct LicensePlateResponse {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CreateLicensePlateRequest {
-    user_id: Uuid,
-    license_plate: String,
+    pub user_id: Uuid,
+    pub license_plate: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
