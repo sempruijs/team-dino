@@ -44,7 +44,7 @@ curl -X GET "http://localhost:3030/check_card/bla-bla-bla"
 ### Get user by uuid
 
 ```bash
-curl -X GET http://localhost:3030/get_user/<UUID>
+curl -X GET http://localhost:3030/users/<UUID>
 ```
 
 So with an example user:
