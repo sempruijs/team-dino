@@ -2,6 +2,7 @@ use crate::handlers::card::*;
 use crate::handlers::license_plate::*;
 use crate::handlers::ticket::*;
 use crate::handlers::user::*;
+use sqlx::types::Uuid;
 use sqlx::PgPool;
 use warp::Filter;
 
@@ -51,6 +52,12 @@ pub async fn serve_routes(pool: PgPool) {
         .and(pool_filter.clone())
         .and_then(create_card_handler);
 
+    let get_user = warp::get()
+        .and(warp::path("users"))
+        .and(warp::path::param::<Uuid>()) // User ID as a path parameter.
+        .and(pool_filter.clone())
+        .and_then(get_user_handler);
+
     // Combine all the routes
     let routes = create_user
         .or(create_ticket)
@@ -58,6 +65,7 @@ pub async fn serve_routes(pool: PgPool) {
         .or(check_card)
         .or(create_license_plate)
         .or(create_card)
+        .or(get_user)
         .with(cors);
 
     println!("Running on port 3030...");
