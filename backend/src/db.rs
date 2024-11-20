@@ -48,12 +48,19 @@ pub async fn get_user_by_id(pool: &PgPool, user_id: Uuid) -> Result<Option<User>
 
 pub async fn check_license_plate(pool: &PgPool, plate: &str) -> Result<bool, sqlx::Error> {
     let exists = sqlx::query_scalar!(
-        "SELECT EXISTS (SELECT 1 FROM license_plates WHERE license_plate = $1)",
+        r#"
+        SELECT EXISTS(
+            SELECT 1 
+            FROM license_plates 
+            WHERE license_plate = $1
+        )
+        "#,
         plate
     )
     .fetch_one(pool)
     .await?;
-    Ok(exists.expect("Problem with checking if license plate exists or not."))
+
+    Ok(exists.unwrap())
 }
 
 pub async fn create_license_plate(
