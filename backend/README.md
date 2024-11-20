@@ -35,6 +35,11 @@ curl -X POST http://localhost:3030/create_ticket \
 curl -X GET "http://localhost:3030/check_license_plate/ABC123"
 ```
 
+### Check if card exists
+
+```bash
+curl -X GET "http://localhost:3030/check_card/bla-bla-bla"
+```
 
 ### Get user by uuid
 
