@@ -64,6 +64,24 @@ pub async fn check_license_plate_handler(
     }
 }
 
+pub async fn check_card_handler(
+    card_id: String,
+    pool: PgPool,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    match check_card(&pool, &card_id).await {
+        Ok(exists) => {
+            if exists {
+                Ok(warp::reply::json(&true))
+            } else {
+                Ok(warp::reply::json(&false))
+            }
+        }
+        Err(e) => {
+            panic!("Error checking card: {}", e);
+        }
+    }
+}
+
 pub async fn create_license_plate_handler(
     request: CreateLicensePlateRequest,
     pool: PgPool,

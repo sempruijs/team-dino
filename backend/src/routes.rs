@@ -31,6 +31,12 @@ pub async fn serve_routes(pool: PgPool) {
         .and(pool_filter.clone())
         .and_then(check_license_plate_handler);
 
+    let check_card = warp::get()
+        .and(warp::path("check_card"))
+        .and(warp::path::param())
+        .and(pool_filter.clone())
+        .and_then(check_card_handler);
+
     let create_license_plate = warp::post()
         .and(warp::path("license_plates")) // Exposes the route at /license_plates
         .and(warp::body::json()) // Expects a JSON body
@@ -47,6 +53,7 @@ pub async fn serve_routes(pool: PgPool) {
     let routes = create_user
         .or(create_ticket)
         .or(check_license_plate)
+        .or(check_card)
         .or(create_license_plate)
         .or(create_card)
         .with(cors);

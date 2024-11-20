@@ -63,6 +63,23 @@ pub async fn check_license_plate(pool: &PgPool, plate: &str) -> Result<bool, sql
     Ok(exists.unwrap())
 }
 
+pub async fn check_card(pool: &PgPool, card_id: &str) -> Result<bool, sqlx::Error> {
+    let exists = sqlx::query_scalar!(
+        r#"
+        SELECT EXISTS(
+            SELECT 1 
+            FROM cards 
+            WHERE card_id = $1
+        )
+        "#,
+        card_id
+    )
+    .fetch_one(pool)
+    .await?;
+
+    Ok(exists.unwrap())
+}
+
 pub async fn create_license_plate(
     pool: &PgPool,
     user_id: Uuid,
