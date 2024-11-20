@@ -1,5 +1,10 @@
+use crate::db::license_plate::*;
+use crate::types::license_plate::*;
 use serde_json::json;
+use sqlx::PgPool;
 use warp::http::StatusCode;
+use warp::Rejection;
+use warp::Reply;
 
 pub async fn check_license_plate_handler(
     plate: String, // Assuming you have a struct LicensePlateRequest for deserialization

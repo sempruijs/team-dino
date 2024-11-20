@@ -1,3 +1,6 @@
+use crate::types::ticket::*;
+use sqlx::PgPool;
+
 pub async fn create_ticket(pool: &PgPool, ticket: Ticket) -> Result<(), sqlx::Error> {
     sqlx::query!(
         "INSERT INTO tickets (ticket_id, user_id, start_date, end_date, house_number)

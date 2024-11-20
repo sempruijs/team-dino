@@ -1,3 +1,6 @@
+use sqlx::types::Uuid;
+use sqlx::PgPool;
+
 pub async fn check_license_plate(pool: &PgPool, plate: &str) -> Result<bool, sqlx::Error> {
     let exists = sqlx::query_scalar!(
         r#"
