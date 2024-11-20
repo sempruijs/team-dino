@@ -81,3 +81,18 @@ pub async fn create_license_plate(
 
     Ok(())
 }
+
+pub async fn create_card(pool: &PgPool, user_id: Uuid, card_id: String) -> Result<(), sqlx::Error> {
+    sqlx::query!(
+        r#"
+        INSERT INTO cards (user_id, card_id)
+        VALUES ($1, $2)
+        "#,
+        user_id,
+        card_id
+    )
+    .execute(pool)
+    .await?;
+
+    Ok(())
+}

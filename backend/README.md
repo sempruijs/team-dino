@@ -59,3 +59,14 @@ curl -X POST http://localhost:3030/license_plates \
            "license_plate": "ABC123"
          }'
 ```
+
+### Add card to a user
+
+```bash
+curl -X POST http://localhost:3030/cards \
+     -H "Content-Type: application/json" \
+     -d '{
+           "user_id": "123e4567-e89b-12d3-a456-426614174000",
+           "card_id": "bla-bla-bla"
+         }'
+```

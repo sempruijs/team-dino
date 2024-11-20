@@ -37,11 +37,18 @@ pub async fn serve_routes(pool: PgPool) {
         .and(pool_filter.clone()) // Provides the database connection pool
         .and_then(create_license_plate_handler); // Calls the handler
 
+    let create_card = warp::post()
+        .and(warp::path("cards"))
+        .and(warp::body::json())
+        .and(pool_filter.clone())
+        .and_then(create_card_handler);
+
     // Combine all the routes
     let routes = create_user
         .or(create_ticket)
         .or(check_license_plate)
         .or(create_license_plate)
+        .or(create_card)
         .with(cors);
 
     println!("Starting server");
