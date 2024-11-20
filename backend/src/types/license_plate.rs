@@ -1,3 +1,7 @@
+use serde::{Deserialize, Serialize};
+use sqlx::types::Uuid;
+use sqlx::FromRow;
+
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct LicensePlate {
     pub plate_id: i32,

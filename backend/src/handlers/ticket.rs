@@ -1,3 +1,5 @@
+use warp::http::StatusCode;
+
 pub async fn create_ticket_handler(
     ticket: Ticket,
     pool: PgPool,

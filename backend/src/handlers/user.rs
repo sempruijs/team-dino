@@ -1,3 +1,6 @@
+use crate::logging::*;
+use warp::http::StatusCode;
+
 pub async fn create_user_handler(
     user: User,
     pool: PgPool,

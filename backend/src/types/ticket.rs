@@ -1,3 +1,8 @@
+use serde::{Deserialize, Serialize};
+use sqlx::types::chrono::NaiveDate;
+use sqlx::types::Uuid;
+use sqlx::FromRow;
+
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Ticket {
     pub ticket_id: Uuid,

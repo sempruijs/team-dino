@@ -1,3 +1,6 @@
+use serde_json::json;
+use warp::http::StatusCode;
+
 pub async fn check_license_plate_handler(
     plate: String, // Assuming you have a struct LicensePlateRequest for deserialization
     pool: PgPool,
