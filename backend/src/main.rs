@@ -1,12 +1,9 @@
-use chrono::NaiveDate;
+use crate::routes::*;
 use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
 use sqlx::postgres::PgPoolOptions;
-use sqlx::FromRow;
 use std::env;
-use uuid::Uuid;
 
-use crate::routes::*;
 pub mod db;
 pub mod handlers;
 pub mod routes;
