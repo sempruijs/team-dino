@@ -1,3 +1,4 @@
+use crate::hash::*;
 use crate::types::user::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;
@@ -10,7 +11,7 @@ pub async fn create_user(pool: &PgPool, user: User) -> Result<(), sqlx::Error> {
         user.name,
         user.date_of_birth,
         user.email,
-        user.password
+        hash_password(&user.password)
     )
     .execute(pool)
     .await?;
