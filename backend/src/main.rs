@@ -5,6 +5,7 @@ use std::env;
 
 pub mod db;
 pub mod handlers;
+pub mod hash;
 pub mod logging;
 pub mod routes;
 pub mod types;
