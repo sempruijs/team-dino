@@ -16,6 +16,16 @@ curl -X POST http://localhost:3030/users \
     }'
 ```
 
+### authenticate user
+
+Currently this returns a boolean but later it will return a jwt.
+
+```bash
+curl -X POST http://127.0.0.1:3030/authenticate \
+    -H "Content-Type: application/json" \
+    -d '{"email": "johndoe@example.com", "password": "very-special-password"}'
+```
+
 ### create ticket
 
 ```bash
