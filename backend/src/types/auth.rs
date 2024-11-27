@@ -1,6 +1,4 @@
 use serde::{Deserialize, Serialize};
-use sqlx::types::Uuid;
-use sqlx::FromRow;
 
 #[derive(Serialize)]
 pub struct AuthenticateUserResponse {
