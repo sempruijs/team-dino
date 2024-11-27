@@ -8,4 +8,5 @@ pub struct User {
     pub name: String,
     pub date_of_birth: NaiveDate,
     pub email: String,
+    pub password: String,
 }
