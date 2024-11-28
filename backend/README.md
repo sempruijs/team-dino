@@ -11,8 +11,19 @@ curl -X POST http://localhost:3030/users \
         "user_id": "123e4567-e89b-12d3-a456-426614174000",
         "name": "John Doe",
         "email": "johndoe@example.com",
-        "date_of_birth": "1990-01-01"
+        "date_of_birth": "1990-01-01",
+        "password": "very-special-password"
     }'
+```
+
+### authenticate user
+
+Currently this returns a boolean but later it will return a jwt.
+
+```bash
+curl -X POST http://127.0.0.1:3030/authenticate \
+    -H "Content-Type: application/json" \
+    -d '{"email": "johndoe@example.com", "password": "very-special-password"}'
 ```
 
 ### create ticket

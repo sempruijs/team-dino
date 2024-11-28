@@ -3,7 +3,8 @@ CREATE TABLE users (
     user_id UUID PRIMARY KEY,
     name TEXT NOT NULL,
     date_of_birth DATE NOT NULL,
-    email TEXT UNIQUE NOT NULL
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
 );
 
 -- tickets table

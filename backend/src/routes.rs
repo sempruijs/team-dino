@@ -1,3 +1,4 @@
+use crate::handlers::auth::*;
 use crate::handlers::card::*;
 use crate::handlers::license_plate::*;
 use crate::handlers::ticket::*;
@@ -46,6 +47,12 @@ pub async fn serve_routes(pool: PgPool) {
         .and(pool_filter.clone()) // Provides the database connection pool
         .and_then(create_license_plate_handler); // Calls the handler
 
+    let authenticate_user = warp::post()
+        .and(warp::path("authenticate"))
+        .and(warp::body::json()) // Parse JSON body containing email and password
+        .and(pool_filter.clone()) // Database connection pool filter
+        .and_then(authenticate_user_handler);
+
     let create_card = warp::post()
         .and(warp::path("cards"))
         .and(warp::body::json())
@@ -66,6 +73,7 @@ pub async fn serve_routes(pool: PgPool) {
         .or(create_license_plate)
         .or(create_card)
         .or(get_user)
+        .or(authenticate_user)
         .with(cors);
 
     println!("Running on port 3030...");
