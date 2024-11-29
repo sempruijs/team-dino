@@ -52,6 +52,7 @@
             "cargo"
             "llvm-tools"
             "rustc"
+            "rust-src"
           ]);
 
         # Build *just* the cargo dependencies, so we can reuse
