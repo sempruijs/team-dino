@@ -16,8 +16,8 @@ pub async fn create_ticket_handler(
 
     match create_ticket(&pool, ticket).await {
         Ok(_) => Ok(StatusCode::CREATED),
-        Err(_) => {
-            panic!("Error while creating ticket");
+        Err(e) => {
+            panic!("Error while creating ticket {}", e);
         }
     }
 }
