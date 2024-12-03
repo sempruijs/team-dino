@@ -10,7 +10,7 @@ pub async fn check_license_plate_handler(
     plate: String, // Assuming you have a struct LicensePlateRequest for deserialization
     pool: PgPool,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    match check_license_plate(&pool, &plate).await {
+    match license_plate_exists(&pool, &plate).await {
         Ok(exists) => {
             if exists {
                 Ok(warp::reply::json(&true)) // If plate exists, return true
