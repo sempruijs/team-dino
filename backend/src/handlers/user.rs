@@ -16,7 +16,7 @@ pub async fn create_user_handler(
 
     match create_user(&pool, user).await {
         Ok(_) => Ok(StatusCode::CREATED),
-        Err(e) => panic!("error while listing users. Error: {}", e),
+        Err(e) => panic!("Error while creating user. {}", e),
     }
 }
 
