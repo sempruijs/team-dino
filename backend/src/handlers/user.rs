@@ -14,6 +14,8 @@ pub async fn create_user_handler(
     let now = current_time_iso8601();
     println!("New user created: {:?}  ({})", user, now);
 
+    // Return ok when database query is succesful.
+    // Return Err when database query is unsuccesful.
     match create_user(&pool, user).await {
         Ok(_) => Ok(StatusCode::CREATED),
         Err(e) => panic!("Error while creating user. {}", e),
