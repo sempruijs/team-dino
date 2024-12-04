@@ -3,196 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boer Bert Travel</title>
+    <title>De Groene Weide</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="./page.js"></script>
+    <script src="https://kit.fontawesome.com/e7e6177339.js" crossorigin="anonymous"></script>
 </head>
-<body>
-    <!-- Header Section -->
-    <header>
-        </div>
-        <div class="hero-image">
-         <img src="./Boer_Bert-removebg-preview.png" alt="Logo boer bert" style="width: 200px; height: 200px;">
-        </div>
-        <nav>
-            <ul>
-                <li><a href="#">Bookings</a></li>
-                <li><a href="#">Login</a></li>
-                <li><a href="#" class="signup">Sign up</a></li>
-            </ul>
-        </nav>
+<body onload="FetchMainData('header'); FetchMainData('booking-menu'); FetchMainData('footer');">
+    <header id="header">
     </header>
-    
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-    
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 10px;
-            background-color: #0C6655; /* Adjust the color to match your design */
-        }
-    
-        .hero-image {
-            margin: 0;
-        }
-    
-        nav ul {
-            display: flex;
-            list-style: none;
-            margin: 30px 0 0 0;
-            padding: 0;
-        }
-    
-        nav ul li {
-            margin-left: 20px;
-        }
-    
-        nav ul li a {
-            text-decoration: none;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-        }
-    
-        nav ul li a.signup {
-            background-color: #129c83; /* Bright green for the "Sign up" button */
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: black;
-        }
-    </style>
+    <main id="booking-menu">
+    </main>
 
-    <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-content">
-            <h2>BEST DESTINATIONS AROUND THE WORLD</h2>
-            <h1>Travel, enjoy and live<br>a new and full life</h1>
-            <p>Built wicket longer admire do barton vanity itself do in it.<br> Preferred to sportsmen in engrossed listening.<br> Park gate sell they west hard for tho.</p>
-            <a href="#" class="cta-btn">Find out more</a>
-        </div>
-        <div class="hero-image">
-            <img src="./Traveler.png" alt="Traveler sitting on luggage" style="width: 300px; height: 500px;" >
+        <div class="hero-text">
+            <h1>Luxe Vakantiepark in Dishoek</h1>
+            <p>
+                Verscholen in het groen van het Noordelijk kustgebied ligt Boerderijcamping "De Groene Weide."
+                Een unieke plek om tot rust te komen, ver weg van het hectische stadsleven.
+            </p>
         </div>
     </section>
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-    
-        .hero {
-            display: flex;
-            align-items: flex-start; /* Moves content closer to the top */
-            justify-content: space-between;
-            padding: 0px 50px; /* Padding around the section */
-            background-color: #0C6655; /* Adjust as needed */
-        }
-    
-        .hero-content {
-            max-width: 50%; /* Limits text width */
-            margin-top: 20px; /* Space from the top of the section */
-            color: white;
-        }
-    
-        .hero-content h2 {
-            font-size: 18px;
-            color: #f89604; /* Orange color for the subtitle */
-            margin-bottom: 10px;
-        }
-    
-        .hero-content h1 {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-    
-        .hero-content p {
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-    
-        .cta-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #f89604; /* Button color */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-    
-        .hero-image {
-            flex-shrink: 0;
-            margin-left: 20px; /* Moves the image further to the right */
-        }
-    
-        .hero-image img {
-            max-width: 100%;
-            height: auto;
-            object-fit: cover;
-            display: block;
-        }
-    </style>
-
-    <!-- Services Section -->
-    <section class="services">
-        <h3>We Offer Best Services</h3>
-        <div class="service-cards">
-            <div class="service-card">
-                <img src="./weer_2.0-removebg-preview.png" alt="Weather Icon" style="width: 200px; height: 200px;">
-                <h4>Calculated Weather</h4>
-                <p>Built wicket longer admire do barton vanity itself do in it.</p>
+    <section class="info">
+        <div class="camping-section">
+            <div class="text-container">
+                <h2>Kom je met de caravan?</h2>
+                <p>Met privé-sanitair of extra ruime plaatsen</p>
+                <p>Ervaar het gemak van kamperen met je caravan op onze comfortabele plekken, compleet met privé-sanitair (inclusief vloerverwarming!). Voor wie extra ruimte zoekt, hebben we ook XL-plaatsen beschikbaar. Geniet van rust, natuur en alle gemakken tijdens je verblijf!</p>
             </div>
-            <div class="service-card">
-                <img src="./events_2.0-removebg.png" alt="Events Icon" style="width: 200px; height: 200px;">
-                <h4>Local Events</h4>
-                <p>Barton vanity itself do in it. Prefard to men it engrossed listening.</p>
+            <div class="image-container">
+                <img src="./images/2.jpg" alt="Caravan" class="caravan-image">
             </div>
-            <div class="service-card">
-                <img src="./customization-removebg-preview.png" alt="Customization Icon" style="width: 200px; height: 200px;">
-                <h4>Customization</h4>
-                <p>We deliver outsourced aviation services for military customers.</p>
+        </div>
+        <div class="camping-section-right">
+            <div class="image-container">
+                <img src="./images/38.jpg" alt="Tent">
+            </div>
+            <div class="text-container">
+                <h2>Kom je logeren in een tent?</h2>
+                <p>Kies voor een stijlvolle glampingtent of een ruime kampeerplek!</p>
+                <p>Geniet van een unieke glampingervaring in onze luxe ingerichte tenten, compleet met comfortabele bedden en alle gemakken van thuis. Of ga voor een extra ruime kampeerplek met alle rust en ruimte om te genieten van het buitenleven. Welke tent kies jij?</p>
+            </div>
+        </div>
+        <div class="camping-section">
+            <div class="text-container">
+                <h2>Omgeving</h2>
+                <p>Met privé-sanitair of extra ruime plaatsen</p>
+                <p>Ervaar het gemak van kamperen met je caravan op onze comfortabele plekken, compleet met privé-sanitair (inclusief vloerverwarming!). Voor wie extra ruimte zoekt, hebben we ook XL-plaatsen beschikbaar. Geniet van rust, natuur en alle gemakken tijdens je verblijf!</p>
+            </div>
+            <div class="image-container">
+                <img src="./images/28.jpg" alt="Omgeving">
+            </div>
+        </div>
+        <div class="camping-section-right">
+            <div class="image-container">
+                <img src="./images/7.jpg" alt="Activiteiten">
+            </div>
+            <div class="text-container">
+                <h2>Activiteiten</h2>
+                <p>Kies voor een stijlvolle glampingtent of een ruime kampeerplek!</p>
+                <p>Geniet van een unieke glampingervaring in onze luxe ingerichte tenten, compleet met comfortabele bedden en alle gemakken van thuis. Of ga voor een extra ruime kampeerplek met alle rust en ruimte om te genieten van het buitenleven. Welke tent kies jij?</p>
             </div>
         </div>
     </section>
 
-    <!-- Top Destinations Section -->
-    <section class="destinations">
-        <h3>Top Selling</h3>
-        <h2>Top Destinations</h2>
-        <div class="destination-cards">
-            <div class="destination-card">
-                <img src="./Friesland.png" alt="Friesland Campina">
-                <div class="destination-info">
-                    <h4>FrieslandCampina</h4>
-                    <p>1 Days Trip</p>
-                    <span>€49,99</span>
-                </div>
+    <section class="info-small">
+        <div class="camping-section">
+            <div class="image-container">
+                <img src="./images/2.jpg" alt="Caravan">
             </div>
-            <div class="destination-card">
-                <img src="./Utrecht.png" alt="Utrecht">
-                <div class="destination-info">
-                    <h4>Utrecht</h4>
-                    <p>2 Days Trip</p>
-                    <span>€549,99</span>
-                </div>
+            <div class="text-container">
+                <h2>Kom je met de caravan?</h2>
+                <p>Met privé-sanitair of extra ruime plaatsen</p>
+                <p>Ervaar het gemak van kamperen met je caravan op onze comfortabele plekken, compleet met privé-sanitair (inclusief vloerverwarming!). Voor wie extra ruimte zoekt, hebben we ook XL-plaatsen beschikbaar. Geniet van rust, natuur en alle gemakken tijdens je verblijf!</p>
             </div>
-            <div class="destination-card">
-                <img src="./Zaandam.png" alt="Zandam">
-                <div class="destination-info">
-                    <h4>Zandam</h4>
-                    <p>4 Days Trip</p>
-                    <span>€349,99</span>
-                </div>
+        </div>
+        <div class="camping-section-right">
+            <div class="image-container">
+                <img src="./images/38.jpg" alt="Tent">
+            </div>
+            <div class="text-container">
+                <h2>Kom je logeren in een tent?</h2>
+                <p>Kies voor een stijlvolle glampingtent of een ruime kampeerplek!</p>
+                <p>Geniet van een unieke glampingervaring in onze luxe ingerichte tenten, compleet met comfortabele bedden en alle gemakken van thuis. Of ga voor een extra ruime kampeerplek met alle rust en ruimte om te genieten van het buitenleven. Welke tent kies jij?</p>
+            </div>
+        </div>
+        <div class="camping-section">
+            <div class="image-container">
+                <img src="./images/28.jpg" alt="Omgeving">
+            </div>
+            <div class="text-container">
+                <h2>Omgeving</h2>
+                <p>Met privé-sanitair of extra ruime plaatsen</p>
+                <p>Ervaar het gemak van kamperen met je caravan op onze comfortabele plekken, compleet met privé-sanitair (inclusief vloerverwarming!). Voor wie extra ruimte zoekt, hebben we ook XL-plaatsen beschikbaar. Geniet van rust, natuur en alle gemakken tijdens je verblijf!</p>
+            </div>
+        </div>
+        <div class="camping-section-right">
+            <div class="image-container">
+                <img src="./images/7.jpg" alt="Activiteiten">
+            </div>
+            <div class="text-container">
+                <h2>Activiteiten</h2>
+                <p>Kies voor een stijlvolle glampingtent of een ruime kampeerplek!</p>
+                <p>Geniet van een unieke glampingervaring in onze luxe ingerichte tenten, compleet met comfortabele bedden en alle gemakken van thuis. Of ga voor een extra ruime kampeerplek met alle rust en ruimte om te genieten van het buitenleven. Welke tent kies jij?</p>
             </div>
         </div>
     </section>
+
+    <section class="gallery">  
+    </section>
+
+    <footer id="footer">
+    </footer>
+    <script src="script.js"></script>
 </body>
 </html>
