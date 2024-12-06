@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Range Picker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .date-picker-container {
+            position: relative;
+            margin: 50px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .popup {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            width: 700px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .month-year {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .calendar-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .calendar {
+            flex: 1;
+        }
+
+        .days {
+            margin-bottom: 0px;
+            border: 0px;
+            border-radius: 0px;
+        }
+
+        .days div {
+            border-right: 1px solid #cccccc;
+            border-bottom: 1px solid #cccccc;
+            border-radius: 0px;
+        }
+
+        .dates div {
+            border: 1px solid #cccccc;
+            border-radius: 50%;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+        }
+
+        .calendar-grid div {
+            padding: 10px;
+            /* width: 20px; */
+            height: 20px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #cccccc;
+        }
+
+        .calendar-grid div:hover {
+            background-color: #f0f0f0;
+        }
+
+        .calendar-grid .selected {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="date-picker-container">
+        <button id="select-period-btn">Select Period</button>
+        <div id="date-picker-popup" class="popup hidden">
+            <div class="calendar-header">
+                <div class="month-year" id="start-month-year">
+                    <button class="prev-btn" id="start-prev">&lt;</button>
+                    <span id="start-month">December 2024</span>
+                    <button class="next-btn" id="start-next">&gt;</button>
+                </div>
+                <div class="month-year" id="end-month-year">
+                    <button class="prev-btn" id="end-prev">&lt;</button>
+                    <span id="end-month">January 2025</span>
+                    <button class="next-btn" id="end-next">&gt;</button>
+                </div>
+            </div>
+            <div class="calendar-container">
+                <div class="calendar" id="start-calendar">
+                    <!-- Days of the week -->
+                    <div class="calendar-grid days">
+                        <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
+                    </div>
+                    <!-- Dates -->
+                    <div class="calendar-grid" id="start-dates"></div>
+                </div>
+                <div class="calendar" id="end-calendar">
+                    <!-- Days of the week -->
+                    <div class="calendar-grid days">
+                        <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
+                    </div>
+                    <!-- Dates -->
+                    <div class="calendar-grid" id="end-dates"></div>
+                </div>
+            </div>
+            <div class="actions">
+                <button id="apply-dates-btn">Apply</button>
+                <button id="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // script.js
+        document.addEventListener("DOMContentLoaded", () => {
+            const selectPeriodBtn = document.getElementById("select-period-btn");
+            const datePickerPopup = document.getElementById("date-picker-popup");
+            const startDatesGrid = document.getElementById("start-dates");
+            const endDatesGrid = document.getElementById("end-dates");
+            const startMonthDisplay = document.getElementById("start-month");
+            const endMonthDisplay = document.getElementById("end-month");
+        
+            let startMonthYear = new Date(2024, 11); // December 2024
+            let endMonthYear = new Date(2025, 0); // January 2025
+            let selectedStartDate = null;
+            let selectedEndDate = null;
+        
+            // Show/Hide popup
+            selectPeriodBtn.addEventListener("click", () => {
+                datePickerPopup.classList.toggle("hidden");
+                renderCalendar(startDatesGrid, startMonthYear, (date) => selectedStartDate = date);
+                renderCalendar(endDatesGrid, endMonthYear, (date) => selectedEndDate = date);
+            });
+        
+            // Month navigation
+            document.getElementById("start-prev").addEventListener("click", () => {
+                startMonthYear.setMonth(startMonthYear.getMonth() - 1);
+                renderCalendar(startDatesGrid, startMonthYear, (date) => selectedStartDate = date);
+            });
+        
+            document.getElementById("start-next").addEventListener("click", () => {
+                startMonthYear.setMonth(startMonthYear.getMonth() + 1);
+                renderCalendar(startDatesGrid, startMonthYear, (date) => selectedStartDate = date);
+            });
+        
+            document.getElementById("end-prev").addEventListener("click", () => {
+                endMonthYear.setMonth(endMonthYear.getMonth() - 1);
+                renderCalendar2(endDatesGrid, endMonthYear, (date) => selectedEndDate = date);
+            });
+        
+            document.getElementById("end-next").addEventListener("click", () => {
+                endMonthYear.setMonth(endMonthYear.getMonth() + 1);
+                renderCalendar2(endDatesGrid, endMonthYear, (date) => selectedEndDate = date);
+            });
+        
+            // Render calendar grid
+            function renderCalendar(grid, date, onDateSelect) {
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const firstDayOfWeek = new Date(year, month, 1).getDay();
+                const displayMonth = date.toLocaleString("default", { month: "long" });
+            
+                if (grid === startDatesGrid) {
+                    startMonthDisplay.textContent = `${displayMonth} ${year}`;
+                } else {
+                    endMonthDisplay.textContent = `${displayMonth} ${year}`;
+                }
+            
+                grid.innerHTML = "";
+            
+                // Add blank spaces for days before the 1st
+                for (let i = 0; i < (firstDayOfWeek + 6) % 7; i++) {
+                    const emptyCell = document.createElement("div");
+                    emptyCell.id = "empty" + i;
+                    grid.appendChild(emptyCell);
+                }
+            
+                // Add days of the month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayCell = document.createElement("div");
+                    dayCell.textContent = day;
+                    dayCell.id = day;
+                    dayCell.onclick = function() {let from = dayCell.textContent; alert(from);};
+                
+                    dayCell.addEventListener("click", () => {
+                        onDateSelect(new Date(year, month, day));
+                        grid.querySelectorAll("div").forEach((cell) => cell.classList.remove("selected"));
+                        dayCell.classList.add("selected");
+                    });
+                    grid.appendChild(dayCell);
+                }
+            }
+
+            function renderCalendar2(grid, date, onDateSelect) {
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const firstDayOfWeek = new Date(year, month, 1).getDay();
+                const displayMonth = date.toLocaleString("default", { month: "long" });
+            
+                if (grid === startDatesGrid) {
+                    startMonthDisplay.textContent = `${displayMonth} ${year}`;
+                } else {
+                    endMonthDisplay.textContent = `${displayMonth} ${year}`;
+                }
+            
+                grid.innerHTML = "";
+            
+                // Add blank spaces for days before the 1st
+                for (let i = 0; i < (firstDayOfWeek + 6) % 7; i++) {
+                    const emptyCell = document.createElement("div");
+                    emptyCell.id = "empty" + i;
+                    grid.appendChild(emptyCell);
+                }
+            
+                // Add days of the month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayCell = document.createElement("div");
+                    dayCell.textContent = day;
+                    dayCell.id = day;
+                    dayCell.onclick = function() {let from = dayCell.textContent; alert(from);};
+                
+                    dayCell.addEventListener("click", () => {
+                        onDateSelect(new Date(year, month, day));
+                        grid.querySelectorAll("div").forEach((cell) => cell.classList.remove("selected"));
+                        dayCell.classList.add("selected");
+                    });
+                    grid.appendChild(dayCell);
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

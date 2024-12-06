@@ -1,0 +1,21 @@
+[
+    {   
+        "page": "neighbourhood",
+        "elements": "De omgeving van Dishoek"
+    },
+
+    {   
+        "page": "activities",
+        "elements": "Activiteiten"
+    },
+
+    {   
+        "page": "facilities",
+        "elements": "Faciliteiten"
+    },
+
+    {   
+        "page": "bookings",
+        "elements": "Luxe Vakantiepark in Dishoek"
+    }
+]
