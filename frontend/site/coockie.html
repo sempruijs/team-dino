@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geolocation Test</title>
+</head>
+<body>
+    <h1>Geolocation Change Detection</h1>
+    <div id="message"></div>
+
+    <script>
+        // Function to get the geolocation of the device
+        function getGeolocation() {
+            return new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const { latitude, longitude } = position.coords;
+                            resolve({ latitude, longitude });
+                        },
+                        (error) => reject(error),
+                        { enableHighAccuracy: true }
+                    );
+                } else {
+                    reject(new Error('Geolocation is not supported by this browser.'));
+                }
+            });
+        }
+
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + JSON.stringify(value) + ";" + expires + ";path=/";
+        }
+
+        // Function to get a cookie
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const c = cookies[i].trim();
+                if (c.startsWith(name + "=")) {
+                    return JSON.parse(c.substring(name.length + 1));
+                }
+            }
+            return null;
+        }
+
+        // Main function to handle location logic
+        async function checkLocationChange() {
+            try {
+                const currentLocation = await getGeolocation();
+                const storedLocation = getCookie('deviceLocation');
+
+                if (storedLocation) {
+                    const { latitude, longitude } = storedLocation;
+                    const messageElement = document.getElementById('message');
+                    
+                    if (
+                        Math.abs(currentLocation.latitude - latitude) > 0.0001 ||
+                        Math.abs(currentLocation.longitude - longitude) > 0.0001
+                    ) {
+                        messageElement.textContent = "Error: Device location has changed!";
+                        messageElement.style.color = 'red';
+                    } else {
+                        messageElement.textContent = "Device location is consistent.";
+                        messageElement.style.color = 'green';
+                    }
+                } else {
+                    setCookie('deviceLocation', currentLocation, 7);
+                    document.getElementById('message').textContent = "Location stored for the first time.";
+                }
+            } catch (error) {
+                console.error("Geolocation error:", error);
+                document.getElementById('message').textContent = "Error: Unable to retrieve location.";
+            }
+        }
+
+        // Run the main function
+        checkLocationChange();
+    </script>
+</body>
+</html>

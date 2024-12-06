@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Groene Weide</title>
+    <script src="./scripts/page.js"></script>
+    <script src="./scripts/load_cards.js"></script>
+    <script src="./scripts/activiteiten.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/e7e6177339.js" crossorigin="anonymous"></script>
+</head>
+<body onload="FetchData(activiteiten(), 'activiteiten', 'row'); FetchMainData('header'); FetchMainData('booking-menus'); FetchMainData('footer');">
+    <header id="header">
+    </header>
+    <main id="booking-menus">
+    </main>
+
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Activiteiten</h1>
+            <p>
+                Op deze bestemming kun je in juli en augustus deelnemen aan het activiteitenprogramma. In deze periode organiseren we 2 ochtenden per week leuke activiteiten en op vrijdagavond is er live muziek.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="row" id="row">
+            <div class="column">
+                <div class="card">
+                    <img src="./images/38.jpg" alt="Tent">
+                    <h3>Activiteiten</h3>
+                    <a>In juli en augustus hebben we een gevarieerd aanbod voor alle leeftijden. De meeste activiteiten zijn gratis en zonder aanmelding vooraf. Knutselpakketjes zijn verkrijgbaar bij de supermarkt. Kies de creatieve, sportieve of Do It Yourself activiteit die bij jou past!</a>
+                </div>
+            </div>
+          
+            <div class="column">
+                <div class="card">
+                    <img src="./images/38.jpg" alt="Tent">
+                    <h3>Live sportuitzendingen</h3>
+                    <a>Sportfans opgelet! Op ons park beleef je nu alle sportieve hoogtepunten van het jaar onder het genot van een hapje en drankje. Of je nu een groot liefhebber van de Tour bent en de Olympische Spelen op de voet volgt, als superfan van Les Bleus op te bank staat te springen of luidkeels juicht voor de Formule 1: jij hoeft geen wedstrijd te missen. Alle belangrijke sportwedstrijden voor Nederlandse sporters en teams kijk je tijdens de live uitzendingen in onze horeca.</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer">
+    </footer>
+    <script src="./scripts/script.js"></script>
+</body>
+</html>

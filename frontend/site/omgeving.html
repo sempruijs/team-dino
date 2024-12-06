@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Groene Weide</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="./scripts/load_cards.js"></script>
+    <script src="./scripts/omgeving.js"></script>
+    <script src="./scripts/script.js"></script>
+    <script src="./scripts/page.js"></script>
+    <script src="https://kit.fontawesome.com/e7e6177339.js" crossorigin="anonymous"></script>
+</head>
+<body onload="FetchData(omgeving(), 'omgeving', 'row'); FetchMainData('header'); FetchMainData('booking-menus'); FetchMainData('footer');">
+    <header id="header">
+    </header>
+    <main id="booking-menus">
+    </main>
+
+    <section class="hero">
+        <div class="hero-text">
+            <h1>De omgeving van Dishoek</h1>
+            <p>
+                In en rondom Dishoek zijn talloze dingen om te bezoeken.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="row" id="row">
+
+        </div>
+    </section>
+
+    <footer id="footer">
+    </footer>
+    <script>
+        function test(){
+            let val = omgeving();
+            fetchUserData(omgeving(), "omgeving", "row");
+        }
+    </script>
+</body>
+</html>

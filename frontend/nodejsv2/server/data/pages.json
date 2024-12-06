@@ -1,0 +1,36 @@
+[
+    {   
+        "page": "neighbourhood",
+        "elements": "header,booking-menu,booking-menus,hero,row,footer"
+    },
+
+    {   
+        "page": "activities",
+        "elements": "header,booking-menu,booking-menus,hero,row,footer"
+    },
+
+    {   
+        "page": "facilities",
+        "elements": "header,booking-menu,booking-menus,hero,row,footer"
+    },
+
+    {   
+        "page": "bookings",
+        "elements": "header,booking-menu,booking-menus,hero,row,footer"
+    },
+
+    {   
+        "page": "contact",
+        "elements": "header,booking-menu,booking-menus,hero,map,footer"
+    },
+
+    {   
+        "page": "home",
+        "elements": "header,booking-menu,booking-menus,hero,info,footer"
+    },
+
+    {   
+        "page": "more-info",
+        "elements": "header,hero,footer"
+    }
+]

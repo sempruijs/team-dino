@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Groene Weide</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="./scripts/load_cards.js"></script>
+    <script src="./scripts/omgeving.js"></script>
+    <script src="./scripts/faciliteiten.js"></script>
+    <script src="./scripts/activiteiten.js"></script>
+    <script src="./scripts/overnachten.js"></script>
+    <script src="./scripts/more-info.js"></script>
+    <script src="./scripts/script.js"></script>
+    <script src="./scripts/page.js"></script>
+    <script src="https://kit.fontawesome.com/e7e6177339.js" crossorigin="anonymous"></script>
+</head>
+<body onload="FetchMainData('header'); FetchMainData('footer');">
+    <header id="header">
+    </header>
+    <main id="booking-menu">
+    </main>
+
+    <section class="hero" id="hero">
+        <div class="hero-text">
+            <h1>Luxe Vakantiepark in Dishoek</h1>
+            <p>
+                Verscholen in het groen van het Noordelijk kustgebied ligt Boerderijcamping "De Groene Weide."
+                Een unieke plek om tot rust te komen, ver weg van het hectische stadsleven.
+            </p>
+        </div>
+    </section>
+
+    <section id="map">
+        
+    </section>
+
+    <footer id="footer">
+    </footer>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        const type = urlParams.get('type');
+        if (type === "omgeving"){
+            GetMoreData(omgeving(), type, id);
+        } else if (type === "faciliteiten"){
+            GetMoreData(faciliteiten(), type, id);
+        } else if (type === "activiteiten"){
+            GetMoreData(activiteiten(), type, id);
+        } else if (type === "overnachten"){
+            GetMoreData(overnachten(), type, id);
+        }
+    </script>
+</body>
+</html>

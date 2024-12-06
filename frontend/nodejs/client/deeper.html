@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Groene Weide</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="./scripts/load_cards.js"></script>
+    <script src="./scripts/page.js"></script>
+    <script src="./scripts/load_hero.js"></script>
+    <script src="./scripts/scripts.js"></script>
+    <script src="https://kit.fontawesome.com/e7e6177339.js" crossorigin="anonymous"></script>
+</head>
+<body onload="FetchMainData('header'); FetchMainData('footer');">
+    <header id="header">
+    </header>
+
+    <main id="booking-menu">
+    </main>
+
+    <main id="booking-menus">
+    </main>
+
+    <section class="hero" id="hero">
+    </section>
+
+    <section class="row" id="row">
+    </section>
+
+    <section id="map">
+    </section>
+
+    <footer id="footer">
+    </footer>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+        FetchData(page, 'row'); 
+        FetchMainData('header'); 
+        FetchMainData('booking-menus'); 
+        FetchMainData('footer'); 
+        FetchHeroData(page);
+    </script>
+</body>
+</html>
