@@ -40,7 +40,8 @@ curl -X POST http://localhost:3030/create_ticket \
          }'
 ```
 
-### Check if license plate exists
+### Check if license plate is valid
+a license plate is valid when it exists and the assosiated user has a valid ticket. A ticket is valid when the current date is within the range of the start and end date of the ticket.
 
 ```bash
 curl -X GET "http://localhost:3030/check_license_plate/ABC123"
