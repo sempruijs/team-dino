@@ -1,6 +1,5 @@
-use crate::db::ticket::{self, get_tickets};
+use crate::db::ticket::get_tickets;
 use crate::hash::*;
-use crate::types::ticket::Ticket;
 use crate::types::user::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;
