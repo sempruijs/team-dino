@@ -1,4 +1,5 @@
 use crate::types::ticket::*;
+use sqlx::types::Uuid;
 use sqlx::PgPool;
 
 pub async fn create_ticket(pool: &PgPool, ticket: Ticket) -> Result<(), sqlx::Error> {

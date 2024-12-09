@@ -34,8 +34,7 @@ pub async fn get_user_by_id(pool: &PgPool, user_id: Uuid) -> Result<Option<User>
 }
 
 pub async fn user_is_valid(pool: &PgPool, user_id: Uuid) -> Result<bool, sqlx::Error> {
-    // Query all tickets associated with the user
-    let tickets = get_tickets(pool, user_id)?;
+    let tickets = get_tickets(pool, user_id).await?;
     // Check if any ticket is valid
     Ok(tickets.iter().any(|ticket| ticket.valid()))
 }
