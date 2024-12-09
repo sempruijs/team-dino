@@ -3,23 +3,6 @@ use sqlx::PgPool;
 
 use crate::db::user::user_is_valid;
 
-pub async fn license_plate_exists(pool: &PgPool, plate: &str) -> Result<bool, sqlx::Error> {
-    let exists = sqlx::query_scalar!(
-        r#"
-        SELECT EXISTS(
-            SELECT 1 
-            FROM license_plates 
-            WHERE license_plate = $1
-        )
-        "#,
-        plate
-    )
-    .fetch_one(pool)
-    .await?;
-
-    Ok(exists.unwrap())
-}
-
 pub async fn license_plate_is_valid(pool: &PgPool, plate: &str) -> Result<bool, sqlx::Error> {
     let uuid = get_uuid_from_license_plate(pool, plate).await?;
     if let Some(user_id) = uuid {
