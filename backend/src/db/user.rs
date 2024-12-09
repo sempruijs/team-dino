@@ -1,4 +1,6 @@
+use crate::db::ticket::{self, get_tickets};
 use crate::hash::*;
+use crate::types::ticket::Ticket;
 use crate::types::user::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;
@@ -29,4 +31,11 @@ pub async fn get_user_by_id(pool: &PgPool, user_id: Uuid) -> Result<Option<User>
     .fetch_optional(pool)
     .await?;
     Ok(user)
+}
+
+pub async fn user_is_valid(pool: &PgPool, user_id: Uuid) -> Result<bool, sqlx::Error> {
+    // Query all tickets associated with the user
+    let tickets = get_tickets(pool, user_id)?;
+    // Check if any ticket is valid
+    Ok(tickets.iter().any(|ticket| ticket.valid()))
 }
