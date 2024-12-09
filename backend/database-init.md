@@ -9,8 +9,8 @@ CREATE TABLE users (
 
 -- tickets table
 CREATE TABLE tickets (
-    ticket_id UUID PRIMARY KEY,
-    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
+    ticket_id UUID PRIMARY KEY NOT NULL,
+    user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     house_number INTEGER NOT NULL
