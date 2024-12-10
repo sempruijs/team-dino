@@ -1,6 +1,7 @@
 use crate::handlers::auth::*;
 use crate::handlers::card::*;
 use crate::handlers::license_plate::*;
+use crate::handlers::place::*;
 use crate::handlers::ticket::*;
 use crate::handlers::user::*;
 use sqlx::types::Uuid;
@@ -66,6 +67,12 @@ pub async fn serve_routes(pool: PgPool) {
         .and(pool_filter.clone())
         .and_then(create_card_handler);
 
+    let create_place = warp::post()
+        .and(warp::path("places"))
+        .and(warp::body::json())
+        .and(pool_filter.clone())
+        .and_then(create_place_handler);
+
     // recieving user by uuid
     let get_user = warp::get()
         .and(warp::path("users"))
@@ -80,6 +87,7 @@ pub async fn serve_routes(pool: PgPool) {
         .or(check_card)
         .or(create_license_plate)
         .or(create_card)
+        .or(create_place)
         .or(get_user)
         .or(authenticate_user)
         .with(cors);

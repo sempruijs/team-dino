@@ -1,5 +1,4 @@
 use crate::types::place::*;
-use sqlx::types::Uuid;
 use sqlx::PgPool;
 
 pub async fn create_place(pool: &PgPool, place: Place) -> Result<(), sqlx::Error> {
