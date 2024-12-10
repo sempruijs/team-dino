@@ -53,6 +53,14 @@ curl -X POST http://localhost:3030/create_place \
          }'
 ```
 
+### Delete place
+
+You can delete a place. Replace the place_id with your own place_id.
+
+```bash
+curl -X DELETE http://localhost:3030/places/{place_id}
+```
+
 ### recieve all places
 
 This will recieve all places that currently exist on the camping regardless of their availebility.
