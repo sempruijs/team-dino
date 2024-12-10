@@ -16,6 +16,13 @@ CREATE TABLE tickets (
     house_number INTEGER NOT NULL
 );
 
+-- places table
+CREATE TABLE places (
+    place_id UUID PRIMARY KEY NOT NULL,
+    house_number INTEGER NOT NULL
+);
+
+
 -- license plate table
 CREATE TABLE license_plates (
     plate_id SERIAL PRIMARY KEY,
