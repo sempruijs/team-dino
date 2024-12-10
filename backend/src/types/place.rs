@@ -1,4 +1,6 @@
-pub struct place {
+use sqlx::types::Uuid;
+
+pub struct Place {
     pub place_id: Uuid,
-    pub number: u32,
+    pub house_number: i32,
 }
