@@ -1,4 +1,5 @@
 use crate::types::place::*;
+use sqlx::types::Uuid;
 use sqlx::PgPool;
 
 pub async fn create_place(pool: &PgPool, place: Place) -> Result<(), sqlx::Error> {
@@ -25,4 +26,18 @@ pub async fn get_places(pool: &PgPool) -> Result<Vec<Place>, sqlx::Error> {
     .await?;
 
     Ok(places)
+}
+
+pub async fn delete_place(pool: &PgPool, place_id: Uuid) -> Result<u64, sqlx::Error> {
+    let result = sqlx::query!(
+        r#"
+        DELETE FROM places
+        WHERE place_id = $1
+        "#,
+        place_id
+    )
+    .execute(pool)
+    .await?;
+
+    Ok(result.rows_affected())
 }

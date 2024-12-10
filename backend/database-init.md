@@ -22,7 +22,6 @@ CREATE TABLE places (
     house_number INTEGER NOT NULL
 );
 
-
 -- license plate table
 CREATE TABLE license_plates (
     plate_id SERIAL PRIMARY KEY,
