@@ -1,6 +1,8 @@
 use crate::db::place::*;
 use crate::logging::current_time_iso8601;
 use crate::types::place::*;
+use serde_json::json;
+use sqlx::types::Uuid;
 use sqlx::PgPool;
 use warp::http::StatusCode;
 use warp::Reply;
@@ -30,6 +32,25 @@ pub async fn get_places_handler(pool: PgPool) -> Result<impl Reply, warp::Reject
         )),
         Err(err) => {
             panic!("Database error: {}", err);
+        }
+    }
+}
+
+pub async fn delete_place_handler(
+    place_id: Uuid,
+    pool: PgPool,
+) -> Result<impl Reply, warp::Rejection> {
+    match delete_place(&pool, place_id).await {
+        Ok(affected_rows) if affected_rows > 0 => Ok(warp::reply::with_status(
+            warp::reply::json(&json!({"message": "Place deleted successfully"})),
+            StatusCode::OK,
+        )),
+        Ok(_) => Ok(warp::reply::with_status(
+            warp::reply::json(&json!({"error": "Place not found"})),
+            StatusCode::NOT_FOUND,
+        )),
+        Err(err) => {
+            panic!("Failed to delete place. Database error: {}", err);
         }
     }
 }
