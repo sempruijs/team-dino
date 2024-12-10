@@ -53,6 +53,14 @@ curl -X POST http://localhost:3030/create_place \
          }'
 ```
 
+### recieve all places
+
+This will recieve all places that currently exist on the camping regardless of their availebility.
+
+```bash
+curl -X GET http://localhost:3030/places
+```
+
 ### Check if license plate is valid
 a license plate is valid when it exists and the assosiated user has a valid ticket. A ticket is valid when the current date is within the range of the start and end date of the ticket.
 
