@@ -40,6 +40,35 @@ curl -X POST http://localhost:3030/create_ticket \
          }'
 ```
 
+### create place
+
+This is for creating new places on the camping.
+
+```bash
+curl -X POST http://localhost:3030/create_place \
+     -H "Content-Type: application/json" \
+     -d '{
+           "place_id": "21118890-9d83-4dd1-b9fe-c6631c1042ee",
+           "house_number": 42
+         }'
+```
+
+### Delete place
+
+You can delete a place. Replace the place_id with your own place_id.
+
+```bash
+curl -X DELETE http://localhost:3030/places/{place_id}
+```
+
+### recieve all places
+
+This will recieve all places that currently exist on the camping regardless of their availebility.
+
+```bash
+curl -X GET http://localhost:3030/places
+```
+
 ### Check if license plate is valid
 a license plate is valid when it exists and the assosiated user has a valid ticket. A ticket is valid when the current date is within the range of the start and end date of the ticket.
 
