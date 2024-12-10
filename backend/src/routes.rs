@@ -68,7 +68,7 @@ pub async fn serve_routes(pool: PgPool) {
         .and_then(create_card_handler);
 
     let create_place = warp::post()
-        .and(warp::path("places"))
+        .and(warp::path("create_place"))
         .and(warp::body::json())
         .and(pool_filter.clone())
         .and_then(create_place_handler);
