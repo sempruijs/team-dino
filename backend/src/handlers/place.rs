@@ -3,6 +3,7 @@ use crate::logging::current_time_iso8601;
 use crate::types::place::*;
 use sqlx::PgPool;
 use warp::http::StatusCode;
+use warp::Reply;
 
 pub async fn create_place_handler(
     place: Place,
@@ -17,6 +18,18 @@ pub async fn create_place_handler(
         }
         Err(e) => {
             panic!("Error while creating place: {}", e);
+        }
+    }
+}
+
+pub async fn get_places_handler(pool: PgPool) -> Result<impl Reply, warp::Rejection> {
+    match get_places(&pool).await {
+        Ok(places) => Ok(warp::reply::with_status(
+            warp::reply::json(&places),
+            StatusCode::OK,
+        )),
+        Err(err) => {
+            panic!("Database error: {}", err);
         }
     }
 }
