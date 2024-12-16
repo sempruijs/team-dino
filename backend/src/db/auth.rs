@@ -1,12 +1,13 @@
 use crate::hash::*;
 use chrono::{Duration, Utc};
+use jsonwebtoken::{decode, DecodingKey, Validation};
 use jsonwebtoken::{encode, EncodingKey, Header};
 use serde::Deserialize;
 use serde::Serialize;
 use sqlx::PgPool;
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Claims {
+pub struct Claims {
     sub: String, // Subject (e.g., user ID)
     exp: usize,  // Expiration time (as a timestamp)
 }
@@ -52,19 +53,11 @@ pub async fn authenticate_user(
     Ok(None) // Invalid credentials
 }
 
-// pub async fn authenticate_user(
-//     pool: &PgPool,
-//     email: &str,
-//     password: &str,
-// ) -> Result<bool, sqlx::Error> {
-//     // Fetch the hashed password for the given email
-//     let hashed_password: Option<String> =
-//         sqlx::query_scalar!("SELECT password FROM users WHERE email = $1", email)
-//             .fetch_optional(pool)
-//             .await?;
-
-//     match hashed_password {
-//         Some(hashed_password) => Ok(verify_password(password, &hashed_password)),
-//         None => Ok(false),
-//     }
-// }
+pub fn verify_jwt(token: &str, secret_key: String) -> Result<Claims, jsonwebtoken::errors::Error> {
+    decode::<Claims>(
+        token,
+        &DecodingKey::from_secret(secret_key.as_bytes()),
+        &Validation::default(),
+    )
+    .map(|data| data.claims)
+}
