@@ -69,6 +69,14 @@ This will recieve all places that currently exist on the camping regardless of t
 curl -X GET http://localhost:3030/places
 ```
 
+### get places with date filter
+
+this will recieve availible places based on a start and end date.
+
+```bash
+curl "http://localhost:3030/places/available?start_date=2024-12-20&end_date=2024-12-25"
+```
+
 ### Check if license plate is valid
 a license plate is valid when it exists and the assosiated user has a valid ticket. A ticket is valid when the current date is within the range of the start and end date of the ticket.
 
