@@ -11,12 +11,11 @@ struct Claims {
     exp: usize,  // Expiration time (as a timestamp)
 }
 
-const SECRET_KEY: &[u8] = b"your-secret-key";
-
 pub async fn authenticate_user(
     pool: &PgPool,
     email: &str,
     password: &str,
+    secret_key: String,
 ) -> Result<Option<String>, sqlx::Error> {
     // Fetch the hashed password for the given email
     let hashed_password: Option<String> =
@@ -42,7 +41,7 @@ pub async fn authenticate_user(
             let token = encode(
                 &Header::default(),
                 &claims,
-                &EncodingKey::from_secret(SECRET_KEY),
+                &EncodingKey::from_secret(secret_key.as_bytes()),
             )
             .expect("JWT creation failed");
 

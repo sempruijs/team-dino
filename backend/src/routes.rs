@@ -8,7 +8,7 @@ use sqlx::types::Uuid;
 use sqlx::PgPool;
 use warp::Filter;
 
-pub async fn serve_routes(pool: PgPool) {
+pub async fn serve_routes(pool: PgPool, secret_key: String) {
     // Clone the pool to share it across routes
     let pool_filter = warp::any().map(move || pool.clone());
 
@@ -58,6 +58,7 @@ pub async fn serve_routes(pool: PgPool) {
         .and(warp::path("authenticate"))
         .and(warp::body::json()) // Parse JSON body containing email and password
         .and(pool_filter.clone()) // Database connection pool filter
+        .and(warp::any().map(move || secret_key.clone()))
         .and_then(authenticate_user_handler);
 
     // For associateding an nfc card to a user endpoint.
