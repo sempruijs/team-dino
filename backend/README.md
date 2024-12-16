@@ -18,7 +18,7 @@ curl -X POST http://localhost:3030/users \
 
 ### authenticate user
 
-Currently this returns a boolean but later it will return a jwt.
+Returns a json web token (jwt).
 
 ```bash
 curl -X POST http://127.0.0.1:3030/authenticate \
@@ -58,13 +58,12 @@ curl -X POST http://localhost:3030/create_place \
 
 ### Delete place
 
+jwt: yes
 You can delete a place. Replace the place_id with your own place_id.
 
 ```bash
-curl -X DELETE http://localhost:3030/places/{place_id}
-
 curl -X DELETE http://localhost:3030/places/{place_id} \
-  -H "Authorization: Bearer {your_jwt_token}"
+  -H "Authorization: Bearer {jwt}"
 ```
 
 ### recieve all places
