@@ -1,3 +1,4 @@
+use crate::db::user::*;
 use crate::hash::*;
 use chrono::{Duration, Utc};
 use jsonwebtoken::{decode, DecodingKey, Validation};
@@ -33,8 +34,13 @@ pub async fn authenticate_user(
                 .expect("Invalid time")
                 .timestamp() as usize;
 
+            let uuid = get_user_uuid_by_email(pool, email)
+                .await?
+                .expect("failed to unwrap uuid based on email.")
+                .to_string();
+
             let claims = Claims {
-                sub: email.to_string(),
+                sub: uuid,
                 exp: expiration,
             };
 
