@@ -37,3 +37,15 @@ pub async fn user_is_valid(pool: &PgPool, user_id: Uuid) -> Result<bool, sqlx::E
     // Check if any ticket is valid
     Ok(tickets.iter().any(|ticket| ticket.valid()))
 }
+
+pub async fn get_user_uuid_by_email(
+    pool: &PgPool,
+    email: &str,
+) -> Result<Option<Uuid>, sqlx::Error> {
+    // Query the database for the user's UUID based on their email
+    let user_uuid = sqlx::query_scalar!("SELECT user_id FROM users WHERE email = $1", email)
+        .fetch_optional(pool)
+        .await?;
+
+    Ok(user_uuid)
+}

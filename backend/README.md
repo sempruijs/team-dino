@@ -18,7 +18,7 @@ curl -X POST http://localhost:3030/users \
 
 ### authenticate user
 
-Currently this returns a boolean but later it will return a jwt.
+Returns a json web token (jwt).
 
 ```bash
 curl -X POST http://127.0.0.1:3030/authenticate \
@@ -28,18 +28,19 @@ curl -X POST http://127.0.0.1:3030/authenticate \
 
 ### create ticket
 
+jwt: yes
 This will only create a ticket when the house is availible within the selected dates.
 There will never be 2 users that rent the same place on the same date.
 
 ```bash
 curl -X POST http://localhost:3030/create_ticket \
      -H "Content-Type: application/json" \
+     -H "Authorization: Bearer your-jwt-token" \
      -d '{
            "ticket_id": "12998890-9d83-4dd1-b9fe-c6631c1042ee",
-           "user_id": "123e4567-e89b-12d3-a456-426614174000",
            "start_date": "2024-07-01",
            "end_date": "2024-07-07",
-           "place_id": "10000090-9d83-4dd1-b9fe-c6631c1042ee",
+           "place_id": "10000090-9d83-4dd1-b9fe-c6631c1042ee"
          }'
 ```
 
@@ -58,10 +59,12 @@ curl -X POST http://localhost:3030/create_place \
 
 ### Delete place
 
+jwt: yes
 You can delete a place. Replace the place_id with your own place_id.
 
 ```bash
-curl -X DELETE http://localhost:3030/places/{place_id}
+curl -X DELETE http://localhost:3030/places/{place_id} \
+  -H "Authorization: Bearer {jwt}"
 ```
 
 ### recieve all places
