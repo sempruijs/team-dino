@@ -9,7 +9,7 @@ pub struct Ticket {
     pub user_id: Uuid,
     pub start_date: NaiveDate,
     pub end_date: NaiveDate,
-    pub ticket_id: Uuid,
+    pub place_id: Uuid,
 }
 
 impl Ticket {
