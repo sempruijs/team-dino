@@ -1,6 +1,7 @@
 use crate::handlers::auth::*;
 use crate::handlers::card::*;
 use crate::handlers::license_plate::*;
+use crate::handlers::place::*;
 use crate::handlers::ticket::*;
 use crate::handlers::user::*;
 use sqlx::types::Uuid;
@@ -66,6 +67,26 @@ pub async fn serve_routes(pool: PgPool) {
         .and(pool_filter.clone())
         .and_then(create_card_handler);
 
+    // For creating a new place
+    let create_place = warp::post()
+        .and(warp::path("create_place"))
+        .and(warp::body::json())
+        .and(pool_filter.clone())
+        .and_then(create_place_handler);
+
+    // For recieving all places
+    let get_places = warp::get()
+        .and(warp::path("places"))
+        .and(pool_filter.clone())
+        .and_then(get_places_handler);
+
+    // For deleting a place
+    let delete_place = warp::delete()
+        .and(warp::path("places"))
+        .and(warp::path::param::<Uuid>())
+        .and(pool_filter.clone())
+        .and_then(delete_place_handler);
+
     // recieving user by uuid
     let get_user = warp::get()
         .and(warp::path("users"))
@@ -80,6 +101,9 @@ pub async fn serve_routes(pool: PgPool) {
         .or(check_card)
         .or(create_license_plate)
         .or(create_card)
+        .or(create_place)
+        .or(get_places)
+        .or(delete_place)
         .or(get_user)
         .or(authenticate_user)
         .with(cors);
