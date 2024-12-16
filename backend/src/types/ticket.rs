@@ -4,6 +4,14 @@ use sqlx::types::Uuid;
 use sqlx::FromRow;
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct CreateTicket {
+    pub ticket_id: Uuid,
+    pub start_date: NaiveDate,
+    pub end_date: NaiveDate,
+    pub place_id: Uuid,
+}
+
+#[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Ticket {
     pub ticket_id: Uuid,
     pub user_id: Uuid,
