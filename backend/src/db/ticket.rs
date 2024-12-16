@@ -3,7 +3,11 @@ use sqlx::types::Uuid;
 use sqlx::PgPool;
 
 // creates a ticket only if the place is not taken by someone else.
-pub async fn create_ticket(pool: &PgPool, ticket: Ticket) -> Result<(), sqlx::Error> {
+pub async fn create_ticket(
+    pool: &PgPool,
+    request: CreateTicket,
+    user_id: Uuid,
+) -> Result<(), sqlx::Error> {
     // Check if the place is available for the given dates
     let overlapping_tickets = sqlx::query!(
         r#"
@@ -12,9 +16,9 @@ pub async fn create_ticket(pool: &PgPool, ticket: Ticket) -> Result<(), sqlx::Er
         WHERE place_id = $1
           AND (($2::DATE, $3::DATE) OVERLAPS (start_date, end_date))
         "#,
-        ticket.place_id,
-        ticket.start_date,
-        ticket.end_date
+        request.place_id,
+        request.start_date,
+        request.end_date
     )
     .fetch_optional(pool)
     .await?;
@@ -28,11 +32,11 @@ pub async fn create_ticket(pool: &PgPool, ticket: Ticket) -> Result<(), sqlx::Er
     sqlx::query!(
         "INSERT INTO tickets (ticket_id, user_id, start_date, end_date, place_id)
          VALUES ($1, $2, $3, $4, $5)",
-        ticket.ticket_id,
-        ticket.user_id,
-        ticket.start_date,
-        ticket.end_date,
-        ticket.place_id
+        request.ticket_id,
+        user_id,
+        request.start_date,
+        request.end_date,
+        request.place_id
     )
     .execute(pool)
     .await?;

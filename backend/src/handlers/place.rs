@@ -41,7 +41,7 @@ pub async fn get_places_handler(pool: PgPool) -> Result<impl Reply, warp::Reject
 pub async fn delete_place_handler(
     place_id: Uuid,
     pool: PgPool,
-    _auth: (),
+    _uuid: Uuid,
 ) -> Result<impl Reply, warp::Rejection> {
     match delete_place(&pool, place_id).await {
         Ok(affected_rows) if affected_rows > 0 => Ok(warp::reply::with_status(

@@ -9,8 +9,8 @@ use sqlx::PgPool;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
-    sub: String, // Subject (e.g., user ID)
-    exp: usize,  // Expiration time (as a timestamp)
+    pub uuid: String,
+    pub exp: usize, // Expiration time (as a timestamp)
 }
 
 pub async fn authenticate_user(
@@ -34,13 +34,14 @@ pub async fn authenticate_user(
                 .expect("Invalid time")
                 .timestamp() as usize;
 
+            // recieve uuid
             let uuid = get_user_uuid_by_email(pool, email)
                 .await?
                 .expect("failed to unwrap uuid based on email.")
                 .to_string();
 
             let claims = Claims {
-                sub: uuid,
+                uuid: uuid,
                 exp: expiration,
             };
 

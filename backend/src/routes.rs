@@ -13,13 +13,17 @@ use warp::Rejection;
 // warp filter that requires valid jwt
 pub fn with_jwt_auth(
     secret_key: String,
-) -> impl Filter<Extract = ((),), Error = Rejection> + Clone {
+) -> impl Filter<Extract = (Uuid,), Error = Rejection> + Clone {
     warp::header::<String>("authorization").and_then(move |token: String| {
         let secret_key = secret_key.clone(); // Clone the secret_key inside the closure
         async move {
             let token = token.trim_start_matches("Bearer ");
             match verify_jwt(token, secret_key) {
-                Ok(_claims) => Ok(()),                             // Proceed if JWT is valid
+                Ok(claims) => {
+                    let user_id =
+                        Uuid::parse_str(&claims.uuid).expect("error while parsing string  to uuid"); // Ensure claims contain `user_id`
+                    Ok(user_id)
+                } // Proceed if JWT is valid
                 Err(_) => Err(warp::reject::custom(Unauthorized)), // Reject if JWT is invalid
             }
         }
@@ -70,6 +74,7 @@ pub async fn serve_routes(pool: PgPool, secret_key: String) {
         .and(warp::path("create_ticket"))
         .and(warp::body::json()) // Accept JSON body for ticket
         .and(pool_filter.clone())
+        .and(with_jwt_auth(secret_key.clone()))
         .and_then(create_ticket_handler);
 
     // check_license_plate endpoint
