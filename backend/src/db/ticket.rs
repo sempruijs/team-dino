@@ -2,6 +2,7 @@ use crate::types::ticket::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;
 
+// creates a ticket only if the place is not taken by someone else.
 pub async fn create_ticket(pool: &PgPool, ticket: Ticket) -> Result<(), sqlx::Error> {
     // Check if the place is available for the given dates
     let overlapping_tickets = sqlx::query!(
