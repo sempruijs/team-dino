@@ -80,6 +80,14 @@ pub async fn serve_routes(pool: PgPool) {
         .and(pool_filter.clone())
         .and_then(get_places_handler);
 
+    // for recieving places with a date filter
+    let get_available_places = warp::get()
+        .and(warp::path("places"))
+        .and(warp::path("available"))
+        .and(warp::query::<AvailablePlacesQuery>()) // Deserialize query parameters
+        .and(pool_filter.clone())
+        .and_then(get_available_places_handler);
+
     // For deleting a place
     let delete_place = warp::delete()
         .and(warp::path("places"))
@@ -103,6 +111,7 @@ pub async fn serve_routes(pool: PgPool) {
         .or(create_card)
         .or(create_place)
         .or(get_places)
+        .or(get_available_places)
         .or(delete_place)
         .or(get_user)
         .or(authenticate_user)
