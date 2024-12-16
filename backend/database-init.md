@@ -13,7 +13,7 @@ CREATE TABLE tickets (
     user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    house_number INTEGER NOT NULL
+    place_id UUID NOT NULL,
 );
 
 -- places table
