@@ -28,6 +28,9 @@ curl -X POST http://127.0.0.1:3030/authenticate \
 
 ### create ticket
 
+This will only create a ticket when the house is availible within the selected dates.
+There will never be 2 users that rent the same place on the same date.
+
 ```bash
 curl -X POST http://localhost:3030/create_ticket \
      -H "Content-Type: application/json" \
