@@ -4,13 +4,13 @@ use sqlx::PgPool;
 
 pub async fn create_ticket(pool: &PgPool, ticket: Ticket) -> Result<(), sqlx::Error> {
     sqlx::query!(
-        "INSERT INTO tickets (ticket_id, user_id, start_date, end_date, house_number)
+        "INSERT INTO tickets (ticket_id, user_id, start_date, end_date, place_id)
          VALUES ($1, $2, $3, $4, $5)",
         ticket.ticket_id,
         ticket.user_id,
         ticket.start_date,
         ticket.end_date,
-        ticket.house_number
+        ticket.place_id
     )
     .execute(pool)
     .await?;
@@ -22,7 +22,7 @@ pub async fn get_tickets(pool: &PgPool, user_id: Uuid) -> Result<Vec<Ticket>, sq
     let tickets = sqlx::query_as!(
         Ticket,
         r#"
-        SELECT ticket_id, user_id, start_date, end_date, house_number
+        SELECT ticket_id, user_id, start_date, end_date, place_id
         FROM tickets
         WHERE user_id = $1
         "#,
