@@ -62,6 +62,9 @@ You can delete a place. Replace the place_id with your own place_id.
 
 ```bash
 curl -X DELETE http://localhost:3030/places/{place_id}
+
+curl -X DELETE http://localhost:3030/places/{place_id} \
+  -H "Authorization: Bearer {your_jwt_token}"
 ```
 
 ### recieve all places

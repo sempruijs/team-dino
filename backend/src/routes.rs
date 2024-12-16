@@ -1,3 +1,4 @@
+use crate::db::auth::*;
 use crate::handlers::auth::*;
 use crate::handlers::card::*;
 use crate::handlers::license_plate::*;
@@ -7,6 +8,45 @@ use crate::handlers::user::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;
 use warp::Filter;
+use warp::Rejection;
+
+// warp filter that requires valid jwt
+pub fn with_jwt_auth(
+    secret_key: String,
+) -> impl Filter<Extract = ((),), Error = Rejection> + Clone {
+    warp::header::<String>("authorization").and_then(move |token: String| {
+        let secret_key = secret_key.clone(); // Clone the secret_key inside the closure
+        async move {
+            let token = token.trim_start_matches("Bearer ");
+            match verify_jwt(token, secret_key) {
+                Ok(_claims) => Ok(()),                             // Proceed if JWT is valid
+                Err(_) => Err(warp::reject::custom(Unauthorized)), // Reject if JWT is invalid
+            }
+        }
+    })
+}
+
+// Custom rejection type for unauthorized access
+#[derive(Debug)]
+struct Unauthorized;
+
+impl warp::reject::Reject for Unauthorized {}
+
+// Function to handle the rejection
+// async fn handle_rejection(err: Rejection) -> Result<impl warp::Reply, warp::Rejection> {
+//     if let Some(Unauthorized) = err.find::<Unauthorized>() {
+//         Ok(warp::reply::with_status(
+//             "Unauthorized",
+//             StatusCode::UNAUTHORIZED,
+//         ))
+//     } else {
+//         // Handle other rejections
+//         Ok(warp::reply::with_status(
+//             "Internal Server Error",
+//             StatusCode::INTERNAL_SERVER_ERROR,
+//         ))
+//     }
+// }
 
 pub async fn serve_routes(pool: PgPool, secret_key: String) {
     // Clone the pool to share it across routes
@@ -53,14 +93,6 @@ pub async fn serve_routes(pool: PgPool, secret_key: String) {
         .and(pool_filter.clone()) // Provides the database connection pool
         .and_then(create_license_plate_handler); // Calls the handler
 
-    // check if user credentials are valid endpoint
-    let authenticate_user = warp::post()
-        .and(warp::path("authenticate"))
-        .and(warp::body::json()) // Parse JSON body containing email and password
-        .and(pool_filter.clone()) // Database connection pool filter
-        .and(warp::any().map(move || secret_key.clone()))
-        .and_then(authenticate_user_handler);
-
     // For associateding an nfc card to a user endpoint.
     let create_card = warp::post()
         .and(warp::path("cards"))
@@ -94,6 +126,7 @@ pub async fn serve_routes(pool: PgPool, secret_key: String) {
         .and(warp::path("places"))
         .and(warp::path::param::<Uuid>())
         .and(pool_filter.clone())
+        .and(with_jwt_auth(secret_key.clone()))
         .and_then(delete_place_handler);
 
     // recieving user by uuid
@@ -102,6 +135,14 @@ pub async fn serve_routes(pool: PgPool, secret_key: String) {
         .and(warp::path::param::<Uuid>()) // User ID as a path parameter.
         .and(pool_filter.clone())
         .and_then(get_user_handler);
+
+    // check if user credentials are valid endpoint
+    let authenticate_user = warp::post()
+        .and(warp::path("authenticate"))
+        .and(warp::body::json()) // Parse JSON body containing email and password
+        .and(pool_filter.clone()) // Database connection pool filter
+        .and(warp::any().map(move || secret_key.clone()))
+        .and_then(authenticate_user_handler);
 
     // Combine all the routes
     let routes = create_user
