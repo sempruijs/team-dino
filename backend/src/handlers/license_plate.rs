@@ -1,6 +1,7 @@
 use crate::db::license_plate::*;
 use crate::types::license_plate::*;
 use serde_json::json;
+use sqlx::types::Uuid;
 use sqlx::PgPool;
 use warp::http::StatusCode;
 use warp::Rejection;
@@ -9,6 +10,7 @@ use warp::Reply;
 pub async fn check_license_plate_handler(
     plate: String, // Assuming you have a struct LicensePlateRequest for deserialization
     pool: PgPool,
+    _user_id: Uuid,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     match license_plate_is_valid(&pool, &plate).await {
         Ok(valid) => Ok(warp::reply::json(&valid)),

@@ -82,6 +82,7 @@ pub async fn serve_routes(pool: PgPool, secret_key: String) {
         .and(warp::path("check_license_plate"))
         .and(warp::path::param()) // Path parameter (license plate)
         .and(pool_filter.clone())
+        .and(with_jwt_auth(secret_key.clone()))
         .and_then(check_license_plate_handler);
 
     // check if card is valid endpoint
