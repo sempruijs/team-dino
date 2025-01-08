@@ -22,7 +22,7 @@ pub async fn create_user_handler(
     }
 }
 
-pub async fn get_user_handler(user_id: Uuid, pool: PgPool) -> Result<impl Reply, Rejection> {
+pub async fn get_user_handler(pool: PgPool, user_id: Uuid) -> Result<impl Reply, Rejection> {
     match get_user_by_id(&pool, user_id).await {
         Ok(Some(user)) => {
             // User found: Return user data with 200 OK.

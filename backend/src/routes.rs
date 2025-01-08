@@ -143,8 +143,8 @@ pub async fn serve_routes(pool: PgPool, secret_key: String) {
     // recieving user by uuid
     let get_user = warp::get()
         .and(warp::path("users"))
-        .and(warp::path::param::<Uuid>()) // User ID as a path parameter.
         .and(pool_filter.clone())
+        .and(with_jwt_auth(secret_key.clone()))
         .and_then(get_user_handler);
 
     // check if user credentials are valid endpoint
