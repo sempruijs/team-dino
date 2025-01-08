@@ -106,6 +106,7 @@ pub async fn serve_routes(pool: PgPool, secret_key: String) {
         .and(warp::path("cards"))
         .and(warp::body::json())
         .and(pool_filter.clone())
+        .and(with_jwt_auth(secret_key.clone()))
         .and_then(create_card_handler);
 
     // For creating a new place

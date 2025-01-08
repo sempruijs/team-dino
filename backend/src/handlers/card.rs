@@ -29,6 +29,7 @@ pub async fn check_card_handler(
 pub async fn create_card_handler(
     request: CreateCardRequest,
     pool: PgPool,
+    _user_id: Uuid,
 ) -> Result<impl Reply, Rejection> {
     match create_card(&pool, request.user_id, request.card_id).await {
         Ok(_) => Ok(warp::reply::with_status(
