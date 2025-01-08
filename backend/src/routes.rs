@@ -114,12 +114,14 @@ pub async fn serve_routes(pool: PgPool, secret_key: String) {
         .and(warp::path("create_place"))
         .and(warp::body::json())
         .and(pool_filter.clone())
+        .and(with_jwt_auth(secret_key.clone()))
         .and_then(create_place_handler);
 
     // For recieving all places
     let get_places = warp::get()
         .and(warp::path("places"))
         .and(pool_filter.clone())
+        .and(with_jwt_auth(secret_key.clone()))
         .and_then(get_places_handler);
 
     // for recieving places with a date filter

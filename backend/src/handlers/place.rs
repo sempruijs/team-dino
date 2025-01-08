@@ -12,6 +12,7 @@ use warp::Reply;
 pub async fn create_place_handler(
     place: Place,
     pool: PgPool,
+    _user_id: Uuid,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     let now = current_time_iso8601(); // Assuming this function returns the current time as ISO8601
 
@@ -26,7 +27,10 @@ pub async fn create_place_handler(
     }
 }
 
-pub async fn get_places_handler(pool: PgPool) -> Result<impl Reply, warp::Rejection> {
+pub async fn get_places_handler(
+    pool: PgPool,
+    _user_id: Uuid,
+) -> Result<impl Reply, warp::Rejection> {
     match get_places(&pool).await {
         Ok(places) => Ok(warp::reply::with_status(
             warp::reply::json(&places),
