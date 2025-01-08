@@ -1,6 +1,7 @@
 use crate::db::card::*;
 use crate::types::card::*;
 use serde_json::json;
+use sqlx::types::Uuid;
 use sqlx::PgPool;
 use warp::http::StatusCode;
 use warp::Rejection;
@@ -9,6 +10,7 @@ use warp::Reply;
 pub async fn check_card_handler(
     card_id: String,
     pool: PgPool,
+    _user_id: Uuid,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     match check_card(&pool, &card_id).await {
         Ok(exists) => {
