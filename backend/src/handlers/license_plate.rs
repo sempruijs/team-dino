@@ -23,6 +23,7 @@ pub async fn check_license_plate_handler(
 pub async fn create_license_plate_handler(
     request: CreateLicensePlateRequest,
     pool: PgPool,
+    _user_id: Uuid,
 ) -> Result<impl Reply, Rejection> {
     match create_license_plate(&pool, request.user_id, request.license_plate).await {
         Ok(_) => Ok(warp::reply::with_status(

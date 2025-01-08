@@ -98,6 +98,7 @@ pub async fn serve_routes(pool: PgPool, secret_key: String) {
         .and(warp::path("license_plates")) // Exposes the route at /license_plates
         .and(warp::body::json()) // Expects a JSON body
         .and(pool_filter.clone()) // Provides the database connection pool
+        .and(with_jwt_auth(secret_key.clone()))
         .and_then(create_license_plate_handler); // Calls the handler
 
     // For associateding an nfc card to a user endpoint.
