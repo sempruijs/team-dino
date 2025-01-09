@@ -7,6 +7,7 @@ use std::env;
 pub mod controller;
 pub mod repository;
 pub mod service;
+pub mod traits;
 
 // types that are used accross the modules.
 pub mod types;
