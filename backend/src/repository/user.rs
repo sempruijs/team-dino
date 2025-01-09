@@ -1,8 +1,19 @@
 use crate::repository::ticket::get_tickets;
 use crate::service::hash::*;
-use crate::types::user::*;
+use serde::{Deserialize, Serialize};
+use sqlx::types::chrono::NaiveDate;
 use sqlx::types::Uuid;
+use sqlx::FromRow;
 use sqlx::PgPool;
+
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct User {
+    pub user_id: Uuid,
+    pub name: String,
+    pub date_of_birth: NaiveDate,
+    pub email: String,
+    pub password: String,
+}
 
 pub async fn create_user(pool: &PgPool, user: User) -> Result<(), sqlx::Error> {
     sqlx::query!(
