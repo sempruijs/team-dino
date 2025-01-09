@@ -1,23 +1,32 @@
 use crate::repository::user::*;
 use crate::service::logging::*;
+use crate::service::user::*;
 use crate::traits::FromUuid;
-use crate::traits::*;
+use chrono::NaiveDate;
+use serde::{Deserialize, Serialize};
 use sqlx::types::Uuid;
+use sqlx::FromRow;
 use sqlx::PgPool;
+use utoipa::{OpenApi, ToSchema};
 use warp::http::StatusCode;
 use warp::Rejection;
 use warp::Reply;
 
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct CreateUser {
+    pub email: String,
+    pub name: String,
+    pub date_of_birth: NaiveDate,
+    pub password: String,
+}
+
 pub async fn create_user_handler(
-    user: User,
+    request: CreateUser,
     pool: PgPool,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     let now = current_time_iso8601();
-    println!("New user created: {:?}  ({})", user, now);
-
-    // Return ok when database query is succesful.
-    // Return Err when database query is unsuccesful.
-    match user.create(&pool).await {
+    println!("Creating new user, {}", now);
+    match create_user(&pool, request).await {
         Ok(_) => Ok(StatusCode::CREATED),
         Err(e) => panic!("Error while creating user. {}", e),
     }
