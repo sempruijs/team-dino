@@ -1,6 +1,5 @@
 use crate::repository::user::*;
 use crate::service::logging::*;
-use crate::types::user::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;
 use warp::http::StatusCode;
@@ -16,7 +15,7 @@ pub async fn create_user_handler(
 
     // Return ok when database query is succesful.
     // Return Err when database query is unsuccesful.
-    match create_user(&pool, user).await {
+    match user.create(&pool).await {
         Ok(_) => Ok(StatusCode::CREATED),
         Err(e) => panic!("Error while creating user. {}", e),
     }
