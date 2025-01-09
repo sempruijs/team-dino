@@ -1,6 +1,7 @@
 use crate::repository::user::*;
 use crate::service::logging::*;
 use crate::traits::FromUuid;
+use crate::traits::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;
 use warp::http::StatusCode;

@@ -11,3 +11,12 @@ pub trait FromUuid {
     where
         Self: Sized;
 }
+
+pub trait Create {
+    fn create(
+        self,
+        pool: &PgPool,
+    ) -> impl std::future::Future<Output = Result<(), sqlx::Error>> + Send
+    where
+        Self: Sized;
+}

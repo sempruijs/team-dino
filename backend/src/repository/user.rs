@@ -1,6 +1,7 @@
 use crate::repository::ticket::get_tickets;
 use crate::service::hash::*;
 use crate::traits::FromUuid;
+use crate::traits::*;
 use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::NaiveDate;
 use sqlx::types::Uuid;
@@ -16,8 +17,8 @@ pub struct User {
     pub password: String,
 }
 
-impl User {
-    pub async fn create(self, pool: &PgPool) -> Result<(), sqlx::Error> {
+impl Create for User {
+    async fn create(self, pool: &PgPool) -> Result<(), sqlx::Error> {
         sqlx::query!(
             "INSERT INTO users (user_id, name, date_of_birth, email, password)
              VALUES ($1, $2, $3, $4, $5)",
