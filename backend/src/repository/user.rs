@@ -17,6 +17,16 @@ pub struct User {
     pub password: String,
 }
 
+impl User {
+    // Could be better, valid should recieve self and a pool,
+    // The service layer should merge it into this function.
+    pub async fn valid(pool: &PgPool, user_id: Uuid) -> Result<bool, sqlx::Error> {
+        let tickets = get_tickets(pool, user_id).await?;
+        // Check if any ticket is valid
+        Ok(tickets.iter().any(|ticket| ticket.valid()))
+    }
+}
+
 impl Create for User {
     async fn create(self, pool: &PgPool) -> Result<(), sqlx::Error> {
         sqlx::query!(
@@ -50,12 +60,6 @@ impl FromUuid for User {
         .await?;
         Ok(user)
     }
-}
-
-pub async fn user_is_valid(pool: &PgPool, user_id: Uuid) -> Result<bool, sqlx::Error> {
-    let tickets = get_tickets(pool, user_id).await?;
-    // Check if any ticket is valid
-    Ok(tickets.iter().any(|ticket| ticket.valid()))
 }
 
 pub async fn get_user_uuid_by_email(

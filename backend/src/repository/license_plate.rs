@@ -5,7 +5,7 @@ use sqlx::PgPool;
 pub async fn license_plate_is_valid(pool: &PgPool, plate: &str) -> Result<bool, sqlx::Error> {
     let uuid = get_uuid_from_license_plate(pool, plate).await?;
     if let Some(user_id) = uuid {
-        return Ok(user_is_valid(pool, user_id).await?);
+        return Ok(User::valid(pool, user_id).await?);
     }
     Ok(false)
 }
