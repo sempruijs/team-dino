@@ -1,4 +1,4 @@
-use crate::db::card::*;
+use crate::repository::card::*;
 use crate::types::card::*;
 use serde_json::json;
 use sqlx::types::Uuid;

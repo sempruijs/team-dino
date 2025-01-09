@@ -1,23 +1,12 @@
-use crate::routes::*;
+use crate::controller::routes::serve_routes;
 use dotenv::dotenv;
 use sqlx::postgres::PgPoolOptions;
 use std::env;
 
 // Import different modules that make up the backend
-// db for reading and writing into the database
-pub mod db;
-
-// handlers wrap the database functions so that it has rest api like outputs.
-pub mod handlers;
-
-// For hashing information
-pub mod hash;
-
-// For printing information
-pub mod logging;
-
-// Routes makes from the handlers rest api endpoints
-pub mod routes;
+pub mod controller;
+pub mod repository;
+pub mod service;
 
 // types that are used accross the modules.
 pub mod types;

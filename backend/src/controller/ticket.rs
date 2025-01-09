@@ -1,5 +1,5 @@
-use crate::db::ticket::*;
-use crate::logging::current_time_iso8601;
+use crate::repository::ticket::*;
+use crate::service::logging::current_time_iso8601;
 use crate::types::ticket::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;

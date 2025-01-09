@@ -4,3 +4,4 @@ pub mod license_plate;
 pub mod place;
 pub mod ticket;
 pub mod user;
+pub mod routes;

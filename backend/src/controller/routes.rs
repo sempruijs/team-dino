@@ -1,10 +1,10 @@
-use crate::db::auth::*;
-use crate::handlers::auth::*;
-use crate::handlers::card::*;
-use crate::handlers::license_plate::*;
-use crate::handlers::place::*;
-use crate::handlers::ticket::*;
-use crate::handlers::user::*;
+use crate::controller::auth::*;
+use crate::controller::card::*;
+use crate::controller::license_plate::*;
+use crate::controller::place::*;
+use crate::controller::ticket::*;
+use crate::controller::user::*;
+use crate::repository::auth::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;
 use warp::Filter;

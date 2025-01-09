@@ -1,4 +1,5 @@
-use crate::{db::auth::*, types::auth::AuthenticateUserRequest};
+use crate::repository::auth::*;
+use crate::types::auth::*;
 use sqlx::PgPool;
 
 pub async fn authenticate_user_handler(

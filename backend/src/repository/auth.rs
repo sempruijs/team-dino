@@ -1,5 +1,5 @@
-use crate::db::user::*;
-use crate::hash::*;
+use crate::repository::user::*;
+use crate::service::hash::*;
 use chrono::{Duration, Utc};
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use jsonwebtoken::{encode, EncodingKey, Header};

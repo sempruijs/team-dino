@@ -1,5 +1,5 @@
-use crate::db::user::*;
-use crate::logging::*;
+use crate::repository::user::*;
+use crate::service::logging::*;
 use crate::types::user::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;

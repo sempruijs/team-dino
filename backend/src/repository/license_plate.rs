@@ -1,7 +1,6 @@
+use crate::repository::user::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;
-
-use crate::db::user::user_is_valid;
 
 pub async fn license_plate_is_valid(pool: &PgPool, plate: &str) -> Result<bool, sqlx::Error> {
     let uuid = get_uuid_from_license_plate(pool, plate).await?;

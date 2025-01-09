@@ -1,4 +1,4 @@
-use crate::db::license_plate::*;
+use crate::repository::license_plate::*;
 use crate::types::license_plate::*;
 use serde_json::json;
 use sqlx::types::Uuid;
