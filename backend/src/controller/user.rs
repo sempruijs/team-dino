@@ -1,5 +1,6 @@
 use crate::repository::user::*;
 use crate::service::logging::*;
+use crate::traits::FromUuid;
 use sqlx::types::Uuid;
 use sqlx::PgPool;
 use warp::http::StatusCode;
@@ -22,7 +23,7 @@ pub async fn create_user_handler(
 }
 
 pub async fn get_user_handler(pool: PgPool, user_id: Uuid) -> Result<impl Reply, Rejection> {
-    match get_user_by_id(&pool, user_id).await {
+    match User::from_uuid(&pool, user_id).await {
         Ok(Some(user)) => {
             // User found: Return user data with 200 OK.
             Ok(warp::reply::with_status(

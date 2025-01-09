@@ -1,5 +1,6 @@
 use crate::repository::ticket::get_tickets;
 use crate::service::hash::*;
+use crate::traits::FromUuid;
 use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::NaiveDate;
 use sqlx::types::Uuid;
@@ -32,17 +33,22 @@ impl User {
     }
 }
 
-pub async fn get_user_by_id(pool: &PgPool, user_id: Uuid) -> Result<Option<User>, sqlx::Error> {
-    let user = sqlx::query_as!(
-        User,
-        "SELECT user_id, name, date_of_birth, email, password
-         FROM users
-         WHERE user_id = $1",
-        user_id
-    )
-    .fetch_optional(pool)
-    .await?;
-    Ok(user)
+impl FromUuid for User {
+    async fn from_uuid(pool: &PgPool, user_id: Uuid) -> Result<Option<Self>, sqlx::Error>
+    where
+        Self: Sized,
+    {
+        let user = sqlx::query_as!(
+            User,
+            "SELECT user_id, name, date_of_birth, email, password
+             FROM users
+             WHERE user_id = $1",
+            user_id
+        )
+        .fetch_optional(pool)
+        .await?;
+        Ok(user)
+    }
 }
 
 pub async fn user_is_valid(pool: &PgPool, user_id: Uuid) -> Result<bool, sqlx::Error> {
