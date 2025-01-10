@@ -1,6 +1,7 @@
 use crate::controller::actix_routes::serve_actix_routes;
 use dotenv::dotenv;
 use sqlx::postgres::PgPoolOptions;
+use sqlx::PgPool;
 use std::env;
 
 // Import different modules that make up the backend
@@ -27,5 +28,5 @@ async fn main() -> std::io::Result<()> {
     // Expose all api's
     // serve_routes(pool, secret_key).await;
 
-    serve_actix_routes().await
+    serve_actix_routes(pool, secret_key).await
 }

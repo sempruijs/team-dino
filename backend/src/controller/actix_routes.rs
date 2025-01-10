@@ -1,9 +1,16 @@
 use crate::controller::user::*;
+use actix_web::Scope;
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use sqlx::PgPool;
 
 #[get("/")]
 async fn hello() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
+}
+
+pub fn user() -> Scope {
+    web::scope("/users") // Prefix all routes with `/users`
+        .route("", web::post().to(create_user_handler)) // POST /users
 }
 
 #[post("/echo")]
@@ -16,9 +23,11 @@ async fn manual_hello() -> impl Responder {
 }
 
 pub async fn serve_actix_routes(pool: PgPool, secret_key: String) -> std::io::Result<()> {
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
+            .app_data(pool.clone())
             .service(hello)
+            .service(user())
             .service(echo)
             .route("/hey", web::get().to(manual_hello))
     })
