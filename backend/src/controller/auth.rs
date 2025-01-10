@@ -2,20 +2,32 @@ use crate::repository::auth::*;
 use actix_web::{post, web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
+use utoipa::ToSchema;
 
 #[derive(Serialize)]
 pub struct AuthenticateUserResponse {
     pub valid: bool,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct AuthenticateUserRequest {
     pub email: String,
     pub password: String,
 }
 
+#[utoipa::path(
+    post,
+    path = "/authenticate",
+    request_body = AuthenticateUserRequest,
+    responses(
+        (status = 201, description = "Authenticate user successfully."),
+        (status = 400, description = "Bad request")
+    ),
+    operation_id = "authenticate",
+    tag = "authenticate"
+)]
 #[post("/authenticate")]
-pub async fn authenticate_user_handler(
+pub async fn authenticate(
     request: web::Json<AuthenticateUserRequest>, // Deserialize the JSON request body
     pool: web::Data<PgPool>,                     // Inject the database pool
     secret_key: web::Data<String>,               // Inject the secret key (for JWT signing)

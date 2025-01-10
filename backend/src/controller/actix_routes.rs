@@ -30,7 +30,7 @@ pub async fn serve_actix_routes(pool: PgPool, secret_key: String) -> std::io::Re
         App::new()
             .app_data(pool.clone())
             .service(hello)
-            .service(authenticate_user_handler)
+            .service(authenticate)
             .service(user())
             .service(echo)
             .service(SwaggerUi::new("/docs/{_:.*}").urls(vec![(
