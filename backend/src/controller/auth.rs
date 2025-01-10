@@ -6,7 +6,7 @@ use utoipa::ToSchema;
 
 #[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct AuthenticateUserResponse {
-    pub valid: bool,
+    pub jwt: String,
 }
 
 #[derive(Debug, Deserialize, Serialize, ToSchema)]
@@ -33,7 +33,6 @@ pub async fn authenticate(
     pool: web::Data<PgPool>,                     // Inject the database pool
     secret_key: web::Data<String>,               // Inject the secret key (for JWT signing)
 ) -> impl Responder {
-    // Use your existing function to authenticate the user
     match authenticate_user(
         &pool,
         &request.email,
@@ -42,8 +41,8 @@ pub async fn authenticate(
     )
     .await
     {
-        Ok(valid) => HttpResponse::Ok().json(AuthenticateUserResponse {
-            valid: valid.is_some(),
+        Ok(jwt) => HttpResponse::Ok().json(AuthenticateUserResponse {
+            jwt: jwt.unwrap_or_default(),
         }),
         Err(e) => {
             // Log the error and return an internal server error response
