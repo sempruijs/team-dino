@@ -1,4 +1,4 @@
-use crate::controller::{actix_routes::serve_actix_routes, routes::serve_routes};
+use crate::controller::actix_routes::serve_actix_routes;
 use dotenv::dotenv;
 use sqlx::postgres::PgPoolOptions;
 use std::env;

@@ -1,3 +1,4 @@
+use crate::controller::user::*;
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 
 #[get("/")]
@@ -14,7 +15,7 @@ async fn manual_hello() -> impl Responder {
     HttpResponse::Ok().body("Hey there!")
 }
 
-pub async fn serve_actix_routes() -> std::io::Result<()> {
+pub async fn serve_actix_routes(pool: PgPool, secret_key: String) -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .service(hello)
