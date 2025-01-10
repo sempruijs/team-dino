@@ -5,6 +5,7 @@ use std::env;
 
 // Import different modules that make up the backend
 pub mod controller;
+pub mod docs;
 pub mod repository;
 pub mod service;
 pub mod traits;

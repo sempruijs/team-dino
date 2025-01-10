@@ -12,7 +12,7 @@ use warp::http::StatusCode;
 use warp::Rejection;
 use warp::Reply;
 
-#[derive(Debug, Serialize, Deserialize, FromRow)]
+#[derive(Debug, Serialize, Deserialize, FromRow, ToSchema)]
 pub struct CreateUser {
     pub email: String,
     pub name: String,
@@ -20,6 +20,17 @@ pub struct CreateUser {
     pub password: String,
 }
 
+#[utoipa::path(
+    post,
+    path = "/users",
+    request_body = CreateUser,
+    responses(
+        (status = 201, description = "User created successfully"),
+        (status = 400, description = "Bad request")
+    ),
+    operation_id = "create_user",
+    tag = "Users"
+)]
 pub async fn create_user_handler(
     request: CreateUser,
     pool: PgPool,

@@ -4,6 +4,7 @@ use crate::controller::license_plate::*;
 use crate::controller::place::*;
 use crate::controller::ticket::*;
 use crate::controller::user::*;
+use crate::docs::*;
 use crate::repository::auth::*;
 use sqlx::types::Uuid;
 use sqlx::PgPool;
