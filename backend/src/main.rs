@@ -1,4 +1,4 @@
-use crate::controller::routes::serve_routes;
+use crate::controller::{actix_routes::serve_actix_routes, routes::serve_routes};
 use dotenv::dotenv;
 use sqlx::postgres::PgPoolOptions;
 use std::env;
@@ -14,18 +14,18 @@ pub mod traits;
 pub mod types;
 
 // Main gets executed on startup.
-#[tokio::main]
-async fn main() -> Result<(), sqlx::Error> {
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
     // Read the database path from enviousment variables.
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let secret_key = env::var("DINO_SECRET_KEY").expect("DINO_SECRET_KEY must be set");
 
     // thread pool that executes sql queries.
-    let pool = PgPoolOptions::new().connect(&database_url).await?;
+    let pool = PgPoolOptions::new().connect(&database_url).await.unwrap();
 
     // Expose all api's
-    serve_routes(pool, secret_key).await;
+    // serve_routes(pool, secret_key).await;
 
-    Ok(())
+    serve_actix_routes().await
 }
