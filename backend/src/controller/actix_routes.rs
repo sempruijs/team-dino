@@ -2,6 +2,8 @@ use crate::controller::user::*;
 use actix_web::Scope;
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use sqlx::PgPool;
+use utoipa::OpenApi;
+use utoipa_swagger_ui::{SwaggerUi, Url};
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -29,6 +31,10 @@ pub async fn serve_actix_routes(pool: PgPool, secret_key: String) -> std::io::Re
             .service(hello)
             .service(user())
             .service(echo)
+            .service(SwaggerUi::new("/docs/{_:.*}").urls(vec![(
+                Url::new("docs", "/docs/openapi1.json"),
+                crate::docs::ApiDoc::openapi(),
+            )]))
             .route("/hey", web::get().to(manual_hello))
     })
     .bind(("127.0.0.1", 3030))?

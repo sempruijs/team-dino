@@ -15,7 +15,7 @@ use warp::Reply; // Assuming PgPool is defined elsewhere
 pub struct CreateUser {
     pub email: String,
     pub name: String,
-    pub date_of_birth: NaiveDate,
+    pub date_of_birth: String,
     pub password: String,
 }
 
