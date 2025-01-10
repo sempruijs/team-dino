@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use utoipa::ToSchema;
 
-#[derive(Serialize)]
+#[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct AuthenticateUserResponse {
     pub valid: bool,
 }
@@ -18,6 +18,7 @@ pub struct AuthenticateUserRequest {
 #[utoipa::path(
     post,
     path = "/authenticate",
+    description = "This api takes a email and password and returns a JWT when the credentials are succesful.",
     request_body = AuthenticateUserRequest,
     responses(
         (status = 201, description = "Authenticate user successfully."),
