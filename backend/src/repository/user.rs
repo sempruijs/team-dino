@@ -1,4 +1,4 @@
-use crate::repository::ticket::get_tickets;
+// use crate::repository::ticket::get_tickets;
 use crate::service::hash::*;
 use crate::traits::FromUuid;
 use crate::traits::*;
@@ -17,32 +17,58 @@ pub struct User {
     pub password: String,
 }
 
-impl User {
-    // Could be better, valid should recieve self and a pool,
-    // The service layer should merge it into this function.
-    pub async fn valid(pool: &PgPool, user_id: Uuid) -> Result<bool, sqlx::Error> {
-        let tickets = get_tickets(pool, user_id).await?;
-        // Check if any ticket is valid
-        Ok(tickets.iter().any(|ticket| ticket.valid()))
-    }
+pub struct UserRepository {
+    pool: PgPool,
 }
 
-impl Create for User {
-    async fn create(self, pool: &PgPool) -> Result<(), sqlx::Error> {
+impl UserRepository {
+    pub fn new(pool: PgPool) -> Self {
+        Self { pool }
+    }
+
+    // should be repository error.
+    pub async fn create(&self, user: User) -> Result<(), sqlx::Error> {
         sqlx::query!(
             "INSERT INTO users (user_id, name, date_of_birth, email, password)
              VALUES ($1, $2, $3, $4, $5)",
-            self.user_id,
-            self.name,
-            self.date_of_birth,
-            self.email,
-            hash_password(&self.password)
+            user.user_id,
+            user.name,
+            user.date_of_birth,
+            user.email,
+            hash_password(&user.password)
         )
         .execute(pool)
         .await?;
         Ok(())
     }
 }
+
+// impl User {
+//     // Could be better, valid should recieve self and a pool,
+//     // The service layer should merge it into this function.
+//     pub async fn valid(pool: &PgPool, user_id: Uuid) -> Result<bool, sqlx::Error> {
+//         let tickets = get_tickets(pool, user_id).await?;
+//         // Check if any ticket is valid
+//         Ok(tickets.iter().any(|ticket| ticket.valid()))
+//     }
+// }
+
+// impl Create for User {
+//     async fn create(self, pool: &PgPool) -> Result<(), sqlx::Error> {
+//         sqlx::query!(
+//             "INSERT INTO users (user_id, name, date_of_birth, email, password)
+//              VALUES ($1, $2, $3, $4, $5)",
+//             self.user_id,
+//             self.name,
+//             self.date_of_birth,
+//             self.email,
+//             hash_password(&self.password)
+//         )
+//         .execute(pool)
+//         .await?;
+//         Ok(())
+//     }
+// }
 
 impl FromUuid for User {
     async fn from_uuid(pool: &PgPool, user_id: Uuid) -> Result<Option<Self>, sqlx::Error>
@@ -62,14 +88,14 @@ impl FromUuid for User {
     }
 }
 
-pub async fn get_user_uuid_by_email(
-    pool: &PgPool,
-    email: &str,
-) -> Result<Option<Uuid>, sqlx::Error> {
-    // Query the database for the user's UUID based on their email
-    let user_uuid = sqlx::query_scalar!("SELECT user_id FROM users WHERE email = $1", email)
-        .fetch_optional(pool)
-        .await?;
+// pub async fn get_user_uuid_by_email(
+//     pool: &PgPool,
+//     email: &str,
+// ) -> Result<Option<Uuid>, sqlx::Error> {
+//     // Query the database for the user's UUID based on their email
+//     let user_uuid = sqlx::query_scalar!("SELECT user_id FROM users WHERE email = $1", email)
+//         .fetch_optional(pool)
+//         .await?;
 
-    Ok(user_uuid)
-}
+//     Ok(user_uuid)
+// }

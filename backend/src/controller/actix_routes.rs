@@ -1,7 +1,5 @@
 use crate::controller::auth::*;
 use crate::controller::user::*;
-use actix_web::Scope;
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use sqlx::PgPool;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::{SwaggerUi, Url};
