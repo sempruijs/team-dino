@@ -31,7 +31,7 @@ pub struct CreateUserRequest {
         (status = 400, description = "Invalid input data"),
         (status = 500, description = "Internal server error")
     ),
-    description = "Creates a user. The email should be unique",
+    description = "Creates a user. The email should be unique. Date should be in iso_8601 format, so yyyy-mm-dd.",
     operation_id = "createUser",
     tag = "Users"
 )]
