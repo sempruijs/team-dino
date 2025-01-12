@@ -1,11 +1,13 @@
+#[allow(warnings)]
+use std::sync::Arc;
 #[macro_use]
 use rocket::get;
 use rocket::http::Status;
 use rocket::routes;
 extern crate rocket;
 use crate::controller::user::*;
-use crate::repository::user::UserRepository;
-use crate::service::user::UserService;
+use crate::repository::user::UserRepositoryImpl;
+use crate::service::user::UserServiceImpl;
 use rocket::Build;
 use rocket::State;
 use sqlx::PgPool;
@@ -42,11 +44,14 @@ async fn main() -> Result<(), rocket::Error> {
         .expect("Failed to connect to the database");
 
     // Build layers
-    let repository = UserRepository::new(pool);
-    let service = UserService::new(repository);
-    let controller = UserController::new(service);
+    let repository = UserRepositoryImpl::new(pool);
+    let user_service = UserServiceImpl::new(repository);
 
-    let _rocket = rocket::build().mount("/", routes![index]).launch().await?;
+    let _rocket = rocket::build()
+        .manage(user_service.clone())
+        .mount("/", user_routes(Arc::new(user_service)))
+        .launch()
+        .await?;
 
     Ok(())
 }

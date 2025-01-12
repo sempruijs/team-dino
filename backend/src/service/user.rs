@@ -1,9 +1,17 @@
 use crate::controller::user::*;
 use crate::repository::user::*;
 use crate::traits::*;
-use chrono::NaiveDate;
-use sqlx::PgPool;
-use uuid::Uuid;
+use rocket::async_trait;
+
+#[async_trait]
+pub trait UserService: Send + Sync {
+    // should be a service error.
+    async fn create(&self, user: User) -> Result<(), sqlx::Error>;
+}
+
+pub struct UserServiceImpl<T: UserRepository> {
+    user_repository: T,
+}
 
 // pub async fn create_user(pool: &PgPool, request: CreateUser) -> Result<(), sqlx::Error> {
 //     let user_id = Uuid::new_v4();
@@ -29,17 +37,16 @@ use uuid::Uuid;
 //     user.create(&pool).await
 // }
 
-pub struct UserService {
-    user_repository: UserRepository,
-}
-
-impl UserService {
-    pub fn new(user_repository: UserRepository) -> Self {
+impl<R: UserRepository> UserServiceImpl<R> {
+    pub fn new(user_repository: R) -> Self {
         Self { user_repository }
     }
+}
 
+#[async_trait]
+impl<R: UserRepository> UserService for UserServiceImpl<R> {
     // should be a service error.
-    pub async fn create(&self, user: User) -> Result<(), sqlx::Error> {
+    async fn create(&self, user: User) -> Result<(), sqlx::Error> {
         self.user_repository.create(user).await
     }
 }

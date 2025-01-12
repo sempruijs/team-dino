@@ -2,6 +2,7 @@
 use crate::service::hash::*;
 use crate::traits::FromUuid;
 use crate::traits::*;
+use rocket::async_trait;
 use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::NaiveDate;
 use sqlx::types::Uuid;
@@ -17,17 +18,20 @@ pub struct User {
     pub password: String,
 }
 
-pub struct UserRepository {
-    pool: PgPool,
+#[async_trait]
+pub trait UserRepository: Send + Sync {
+    async fn create(&self, user: User) -> Result<(), sqlx::Error>;
 }
 
-impl UserRepository {
+impl UserRepositoryImpl {
     pub fn new(pool: PgPool) -> Self {
         Self { pool }
     }
+}
 
-    // should be repository error.
-    pub async fn create(&self, user: User) -> Result<(), sqlx::Error> {
+#[async_trait]
+impl UserRepository for UserRepositoryImpl {
+    async fn create(&self, user: User) -> Result<(), sqlx::Error> {
         sqlx::query!(
             "INSERT INTO users (user_id, name, date_of_birth, email, password)
              VALUES ($1, $2, $3, $4, $5)",
@@ -41,6 +45,10 @@ impl UserRepository {
         .await?;
         Ok(())
     }
+}
+
+pub struct UserRepositoryImpl {
+    pool: PgPool,
 }
 
 // impl User {
