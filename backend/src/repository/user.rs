@@ -1,4 +1,5 @@
 // use crate::repository::ticket::get_tickets;
+use crate::domain::User;
 use crate::service::hash::*;
 use crate::traits::FromUuid;
 use crate::traits::*;
@@ -8,16 +9,6 @@ use sqlx::types::chrono::NaiveDate;
 use sqlx::types::Uuid;
 use sqlx::FromRow;
 use sqlx::PgPool;
-
-#[derive(Debug, Serialize, Deserialize, FromRow)]
-pub struct User {
-    pub user_id: Uuid,
-    pub name: String,
-    pub date_of_birth: NaiveDate,
-    pub email: String,
-    pub password: String,
-}
-
 #[async_trait]
 pub trait UserRepository: Send + Sync {
     async fn create(&self, user: User) -> Result<(), sqlx::Error>;

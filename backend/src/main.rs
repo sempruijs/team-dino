@@ -18,6 +18,7 @@ use sqlx::PgPool;
 
 pub mod controller;
 pub mod docs;
+pub mod domain;
 pub mod parser;
 pub mod repository;
 pub mod service;

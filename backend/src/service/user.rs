@@ -1,4 +1,5 @@
 use crate::controller::user::*;
+use crate::domain::User;
 use crate::repository::user::*;
 use crate::traits::*;
 use rocket::async_trait;

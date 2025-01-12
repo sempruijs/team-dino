@@ -1,5 +1,5 @@
+use crate::domain::User;
 use crate::parser::*;
-use crate::repository::user::User;
 use crate::service::user::UserService;
 use chrono::NaiveDate;
 use rocket::futures::FutureExt;
