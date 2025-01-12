@@ -1,4 +1,7 @@
+use crate::repository::user::User;
 use crate::service::user::UserService;
+use chrono::NaiveDate;
+use rocket::futures::FutureExt;
 use rocket::post;
 use rocket::routes;
 use rocket::serde::json::Json;
@@ -7,6 +10,7 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::sync::Arc;
 use utoipa::ToSchema;
+use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema)]
 pub struct CreateUserRequest {
@@ -34,7 +38,20 @@ pub async fn create_user(
     payload: Json<CreateUserRequest>,
     user_service: &State<Arc<dyn UserService>>,
 ) -> Json<bool> {
-    Json(true)
+    // Convert `CreateUserRequest` to `User`
+    let user = User {
+        user_id: Uuid::new_v4(), // Generate a new UUID for the user
+        name: payload.name.clone(),
+        date_of_birth: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(), // Ensure this field has the correct type
+        email: payload.email.clone(),
+        password: payload.password.clone(),
+    };
+
+    // Call the `create` method and await its result
+    match user_service.create(user).await {
+        Ok(()) => Json(true),
+        Err(_) => Json(false),
+    }
 }
 
 pub fn user_routes() -> Vec<rocket::Route> {

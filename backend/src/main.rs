@@ -45,7 +45,7 @@ async fn main() -> Result<(), rocket::Error> {
         .manage(user_service)
         .mount(
             "/",
-            SwaggerUi::new("/swagger-ui/<_..>").url("/api-docs/openapi.json", ApiDoc::openapi()),
+            SwaggerUi::new("/docs/<_..>").url("/api-docs/openapi.json", ApiDoc::openapi()),
         )
         .mount("/", user_routes())
         .launch()
