@@ -1,3 +1,5 @@
+use dotenv::dotenv;
+use std::env;
 use std::sync::Arc;
 use utoipa::OpenApi;
 #[allow(warnings)]
@@ -36,8 +38,12 @@ fn hello() -> &'static str {
 
 #[rocket::main]
 async fn main() -> Result<(), rocket::Error> {
-    let pool = PgPool::connect_lazy("postgres://sem@host.orb.internal:5432/sem")
-        .expect("Failed to connect to the database");
+    // Read the database path from enviousment variables.
+    dotenv().ok();
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let secret_key = env::var("DINO_SECRET_KEY").expect("DINO_SECRET_KEY must be set");
+
+    let pool = PgPool::connect_lazy(&database_url).expect("Failed to connect to the database");
 
     // Build layers
     let repository = UserRepositoryImpl::new(pool);
