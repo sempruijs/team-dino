@@ -7,6 +7,7 @@ use rocket::routes;
 extern crate rocket;
 use crate::controller::user::*;
 use crate::repository::user::UserRepositoryImpl;
+use crate::service::user::UserService;
 use crate::service::user::UserServiceImpl;
 use rocket::Build;
 use rocket::State;
@@ -45,11 +46,11 @@ async fn main() -> Result<(), rocket::Error> {
 
     // Build layers
     let repository = UserRepositoryImpl::new(pool);
-    let user_service = UserServiceImpl::new(repository);
+    let user_service: Arc<dyn UserService> = Arc::new(UserServiceImpl::new(repository));
 
     let _rocket = rocket::build()
-        .manage(user_service.clone())
-        .mount("/", user_routes(Arc::new(user_service)))
+        .manage(user_service)
+        .mount("/", user_routes())
         .launch()
         .await?;
 

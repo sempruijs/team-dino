@@ -25,6 +25,6 @@ async fn create_user(
     Json(true)
 }
 
-pub fn user_routes<S: UserService + 'static>(user_service: Arc<S>) -> Vec<rocket::Route> {
+pub fn user_routes() -> Vec<rocket::Route> {
     routes![create_user]
 }
