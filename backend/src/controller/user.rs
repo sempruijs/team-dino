@@ -1,3 +1,4 @@
+use crate::parser::*;
 use crate::repository::user::User;
 use crate::service::user::UserService;
 use chrono::NaiveDate;
@@ -30,6 +31,7 @@ pub struct CreateUserRequest {
         (status = 400, description = "Invalid input data"),
         (status = 500, description = "Internal server error")
     ),
+    description = "Creates a user. The email should be unique",
     operation_id = "createUser",
     tag = "Users"
 )]
@@ -42,7 +44,7 @@ pub async fn create_user(
     let user = User {
         user_id: Uuid::new_v4(), // Generate a new UUID for the user
         name: payload.name.clone(),
-        date_of_birth: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(), // Ensure this field has the correct type
+        date_of_birth: iso8601_str_to_date(&payload.date_of_birth).unwrap(), // Ensure this field has the correct type
         email: payload.email.clone(),
         password: payload.password.clone(),
     };
