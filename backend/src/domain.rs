@@ -12,3 +12,9 @@ pub struct User {
     pub email: String,
     pub password: String,
 }
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct Place {
+    pub place_id: Uuid,
+    pub house_number: i32,
+}
