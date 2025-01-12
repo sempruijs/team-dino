@@ -6,7 +6,7 @@ use sqlx::PgPool;
 
 #[async_trait]
 pub trait PlaceRepository: Send + Sync {
-    // async fn create_place(&self, place: Place) -> Result<(), sqlx::Error>;
+    async fn create(&self, place: Place) -> Result<(), sqlx::Error>;
 
     async fn get_places(&self) -> Result<Vec<Place>, sqlx::Error>;
 
@@ -37,6 +37,18 @@ impl PlaceRepository for PlaceRepositoryImpl {
         .await?;
 
         Ok(places)
+    }
+
+    async fn create(&self, place: Place) -> Result<(), sqlx::Error> {
+        sqlx::query!(
+            "INSERT INTO places (place_id, house_number)
+                     VALUES ($1, $2)",
+            place.place_id,
+            place.house_number
+        )
+        .execute(&self.pool)
+        .await?;
+        Ok(())
     }
 }
 
