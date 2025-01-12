@@ -17,8 +17,20 @@ pub struct CreateUserRequest {
 }
 
 // Return type should later be CreateUserRepsonse
+#[utoipa::path(
+    post,
+    path = "/users",
+    request_body = CreateUserRequest,
+    responses(
+        (status = 201, description = "User created successfully", body = bool),
+        (status = 400, description = "Invalid input data"),
+        (status = 500, description = "Internal server error")
+    ),
+    operation_id = "createUser",
+    tag = "Users"
+)]
 #[post("/users", data = "<payload>")]
-async fn create_user(
+pub async fn create_user(
     payload: Json<CreateUserRequest>,
     user_service: &State<Arc<dyn UserService>>,
 ) -> Json<bool> {

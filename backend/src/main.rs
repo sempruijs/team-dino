@@ -1,11 +1,14 @@
-#[allow(warnings)]
 use std::sync::Arc;
+use utoipa::OpenApi;
+#[allow(warnings)]
+use utoipa_swagger_ui::SwaggerUi;
 #[macro_use]
 use rocket::get;
 use rocket::http::Status;
 use rocket::routes;
 extern crate rocket;
 use crate::controller::user::*;
+use crate::docs::ApiDoc;
 use crate::repository::user::UserRepositoryImpl;
 use crate::service::user::UserService;
 use crate::service::user::UserServiceImpl;
@@ -14,6 +17,7 @@ use rocket::State;
 use sqlx::PgPool;
 
 pub mod controller;
+pub mod docs;
 pub mod repository;
 pub mod service;
 pub mod traits;
@@ -28,17 +32,6 @@ fn hello() -> &'static str {
     "Hello, saas!"
 }
 
-// #[post("/users", data = "<user>")]
-// pub async fn create_user_route(
-//     user: Json<User>,
-//     controller: &State<UserController>, // Access controller via state
-// ) -> Result<Status, (Status, String)> {
-//     match controller.create(user.into_inner()).await {
-//         Ok(_) => Ok(Status::Created),
-//         Err(err) => Err((Status::InternalServerError, err)),
-//     }
-// }
-
 #[rocket::main]
 async fn main() -> Result<(), rocket::Error> {
     let pool = PgPool::connect_lazy("postgres://sem@host.orb.internal:5432/sem")
@@ -50,6 +43,10 @@ async fn main() -> Result<(), rocket::Error> {
 
     let _rocket = rocket::build()
         .manage(user_service)
+        .mount(
+            "/",
+            SwaggerUi::new("/swagger-ui/<_..>").url("/api-docs/openapi.json", ApiDoc::openapi()),
+        )
         .mount("/", user_routes())
         .launch()
         .await?;
