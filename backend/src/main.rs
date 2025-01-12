@@ -1,5 +1,7 @@
 #[macro_use]
+use rocket::get;
 use rocket::http::Status;
+use rocket::routes;
 extern crate rocket;
 use crate::controller::user::*;
 use crate::repository::user::UserRepository;
@@ -23,16 +25,16 @@ fn hello() -> &'static str {
     "Hello, saas!"
 }
 
-#[post("/users", data = "<user>")]
-pub async fn create_user_route(
-    user: Json<User>,
-    controller: &State<UserController>, // Access controller via state
-) -> Result<Status, (Status, String)> {
-    match controller.create(user.into_inner()).await {
-        Ok(_) => Ok(Status::Created),
-        Err(err) => Err((Status::InternalServerError, err)),
-    }
-}
+// #[post("/users", data = "<user>")]
+// pub async fn create_user_route(
+//     user: Json<User>,
+//     controller: &State<UserController>, // Access controller via state
+// ) -> Result<Status, (Status, String)> {
+//     match controller.create(user.into_inner()).await {
+//         Ok(_) => Ok(Status::Created),
+//         Err(err) => Err((Status::InternalServerError, err)),
+//     }
+// }
 
 #[rocket::main]
 async fn main() -> Result<(), rocket::Error> {
@@ -44,11 +46,7 @@ async fn main() -> Result<(), rocket::Error> {
     let service = UserService::new(repository);
     let controller = UserController::new(service);
 
-    let _rocket = rocket::build()
-        .manage(controller) // Inject UserController as managed state
-        .mount("/", routes![create_user_route])
-        .launch()
-        .await?;
+    let _rocket = rocket::build().mount("/", routes![index]).launch().await?;
 
     Ok(())
 }

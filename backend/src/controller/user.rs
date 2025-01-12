@@ -1,4 +1,4 @@
-use crate::service::user::create_user;
+use crate::UserService;
 use rocket::http::Status;
 use rocket::serde::json::Json;
 use rocket::State;
@@ -40,23 +40,6 @@ impl UserController {
     }
 }
 
-#[post("/users", data = "<user>")]
-pub async fn create_user_handler(
-    user: Json<CreateUser>, // Deserialize request body into `CreateUser`
-    pool: &State<PgPool>,   // Inject shared database pool state
-) -> Result<Status, (Status, String)> {
-    let now = chrono::Utc::now().to_rfc3339(); // ISO 8601 timestamp
-    println!("Creating new user, {}", now);
-
-    // Attempt to insert the new user into the database
-    match create_user(pool.inner(), user.into_inner()).await {
-        Ok(_) => Ok(Status::Created), // 201 Created
-        Err(e) => {
-            println!("Error while creating user: {}", e);
-            Err((Status::InternalServerError, format!("Error: {}", e))) // 500 Internal Server Error
-        }
-    }
-}
 // pub async fn get_user_handler(pool: PgPool, user_id: Uuid) -> Result<impl Reply, Rejection> {
 //     match User::from_uuid(&pool, user_id).await {
 //         Ok(Some(user)) => {

@@ -37,7 +37,7 @@ impl UserRepository {
             user.email,
             hash_password(&user.password)
         )
-        .execute(pool)
+        .execute(&self.pool)
         .await?;
         Ok(())
     }
