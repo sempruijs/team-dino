@@ -5,7 +5,7 @@ use sqlx::types::Uuid;
 use sqlx::PgPool;
 
 #[async_trait]
-pub trait PlaceRepository {
+pub trait PlaceRepository: Send + Sync {
     // async fn create_place(&self, place: Place) -> Result<(), sqlx::Error>;
 
     async fn get_places(&self) -> Result<Vec<Place>, sqlx::Error>;
