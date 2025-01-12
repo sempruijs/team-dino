@@ -3,7 +3,10 @@ use crate::parser::*;
 use crate::service::user::UserService;
 use chrono::NaiveDate;
 use rocket::futures::FutureExt;
+use rocket::get;
+use rocket::http::Status;
 use rocket::post;
+use rocket::response::status;
 use rocket::routes;
 use rocket::serde::json::Json;
 use rocket::State;
@@ -56,6 +59,62 @@ pub async fn create_user(
     }
 }
 
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+struct GetUserRequest {
+    user_id: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+struct GetUserResponse {
+    name: String,
+    email: String,
+}
+
+// Return type should later be CreateUserRepsonse
+#[utoipa::path(
+    get,
+    path = "/users",
+    request_body = GetUserRequest,
+    responses(
+        (status = 201, description = "User recieved successfully", body = GetUserResponse),
+        (status = 400, description = "Invalid input data"),
+        (status = 500, description = "Internal server error")
+    ),
+    description = "Recieve user details.",
+    operation_id = "createUser",
+    tag = "Users"
+)]
+#[get("/users", data = "<payload>")]
+pub async fn get_user(
+    payload: Json<GetUserRequest>,
+    user_service: &State<Arc<dyn UserService>>,
+) -> Result<Json<GetUserResponse>, status::Custom<String>> {
+    let user_id = match Uuid::parse_str(&payload.user_id) {
+        Ok(uuid) => uuid,
+        Err(_) => {
+            return Err(status::Custom(
+                Status::BadRequest,
+                "Invalid user ID".to_string(),
+            ))
+        }
+    };
+
+    match user_service.from_uuid(user_id).await {
+        Ok(Some(user)) => Ok(Json(GetUserResponse {
+            email: user.email,
+            name: user.name,
+        })),
+        Ok(None) => Err(status::Custom(
+            Status::NotFound,
+            "User not found".to_string(),
+        )),
+        Err(_) => Err(status::Custom(
+            Status::InternalServerError,
+            "Internal server error".to_string(),
+        )),
+    }
+}
+
 pub fn user_routes() -> Vec<rocket::Route> {
-    routes![create_user]
+    routes![create_user, get_user]
 }
