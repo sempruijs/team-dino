@@ -1,82 +1,66 @@
-use crate::repository::place::*;
-use crate::service::logging::*;
-use crate::types::place::*;
-use chrono::NaiveDate;
+use crate::domain::Place;
+use crate::service::place::PlaceService;
+use rocket::futures::FutureExt;
+use rocket::get;
+use rocket::http::Status;
+use rocket::response::status;
+use rocket::routes;
+use rocket::serde::json::Json;
+use rocket::State;
 use serde::Deserialize;
-use serde_json::json;
-use sqlx::types::Uuid;
-use sqlx::PgPool;
-use warp::http::StatusCode;
-use warp::Reply;
+use serde::Serialize;
+use std::sync::Arc;
+use utoipa::ToSchema;
+use uuid::Uuid;
 
-pub async fn create_place_handler(
-    place: Place,
-    pool: PgPool,
-    _user_id: Uuid,
-) -> Result<impl warp::Reply, warp::Rejection> {
-    let now = current_time_iso8601(); // Assuming this function returns the current time as ISO8601
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+struct GetPlacesRequest;
 
-    match create_place(&pool, place.clone()).await {
-        Ok(_) => {
-            println!("New place created: {} at: {}", place.place_id, now);
-            Ok(StatusCode::CREATED)
-        }
-        Err(e) => {
-            panic!("Error while creating place: {}", e);
-        }
-    }
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+struct GetPlacesResponse {
+    places: Vec<GetPlaceResponse>,
 }
 
-pub async fn get_places_handler(
-    pool: PgPool,
-    _user_id: Uuid,
-) -> Result<impl Reply, warp::Rejection> {
-    match get_places(&pool).await {
-        Ok(places) => Ok(warp::reply::with_status(
-            warp::reply::json(&places),
-            StatusCode::OK,
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+struct GetPlaceResponse {
+    house_number: i32,
+}
+
+// Return type should later be CreateUserRepsonse
+#[utoipa::path(
+    get,
+    path = "/places",
+    request_body = GetPlacesRequest,
+    responses(
+        (status = 201, description = "Places recieved successfully", body = GetPlacesResponse),
+        (status = 400, description = "Invalid input data"),
+        (status = 500, description = "Internal server error")
+    ),
+    description = "Recieve all places",
+    operation_id = "GetPlaces",
+    tag = "Places"
+)]
+#[get("/places", data = "<payload>")]
+pub async fn get_places(
+    payload: Json<GetPlacesRequest>,
+    place_service: &State<Arc<dyn PlaceService>>,
+) -> Result<Json<GetPlacesResponse>, status::Custom<String>> {
+    match place_service.get_places().await {
+        Ok(places) => Ok(Json(GetPlacesResponse {
+            places: places
+                .iter()
+                .map(|p| GetPlaceResponse {
+                    house_number: p.house_number,
+                })
+                .collect::<Vec<GetPlaceResponse>>(),
+        })),
+        Err(_) => Err(status::Custom(
+            Status::InternalServerError,
+            "Internal server error".to_string(),
         )),
-        Err(err) => {
-            panic!("Database error: {}", err);
-        }
     }
 }
 
-pub async fn delete_place_handler(
-    place_id: Uuid,
-    pool: PgPool,
-    _uuid: Uuid,
-) -> Result<impl Reply, warp::Rejection> {
-    match delete_place(&pool, place_id).await {
-        Ok(affected_rows) if affected_rows > 0 => Ok(warp::reply::with_status(
-            warp::reply::json(&json!({"message": "Place deleted successfully"})),
-            StatusCode::OK,
-        )),
-        Ok(_) => Ok(warp::reply::with_status(
-            warp::reply::json(&json!({"error": "Place not found"})),
-            StatusCode::NOT_FOUND,
-        )),
-        Err(err) => {
-            panic!("Failed to delete place. Database error: {}", err);
-        }
-    }
-}
-
-#[derive(Deserialize)]
-
-pub struct AvailablePlacesQuery {
-    start_date: NaiveDate,
-    end_date: NaiveDate,
-}
-
-pub async fn get_available_places_handler(
-    query: AvailablePlacesQuery,
-    pool: PgPool,
-) -> Result<impl Reply, warp::Rejection> {
-    match get_available_places(&pool, query.start_date, query.end_date).await {
-        Ok(places) => Ok(warp::reply::json(&places)),
-        Err(e) => {
-            panic!("Error while quering database: {}", e)
-        }
-    }
+pub fn place_routes() -> Vec<rocket::Route> {
+    routes![get_places]
 }

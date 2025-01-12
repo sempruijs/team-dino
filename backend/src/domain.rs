@@ -2,6 +2,7 @@ use chrono::NaiveDate;
 use serde::Deserialize;
 use serde::Serialize;
 use sqlx::FromRow;
+use utoipa::ToSchema;
 use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]

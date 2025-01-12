@@ -1,3 +1,4 @@
+use crate::service::place::*;
 use dotenv::dotenv;
 use std::env;
 use std::sync::Arc;
@@ -9,8 +10,10 @@ use rocket::get;
 use rocket::http::Status;
 use rocket::routes;
 extern crate rocket;
+use crate::controller::place::*;
 use crate::controller::user::*;
 use crate::docs::ApiDoc;
+use crate::repository::place::PlaceRepositoryImpl;
 use crate::repository::user::UserRepositoryImpl;
 use crate::service::user::UserService;
 use crate::service::user::UserServiceImpl;
@@ -46,16 +49,21 @@ async fn main() -> Result<(), rocket::Error> {
     let pool = PgPool::connect_lazy(&database_url).expect("Failed to connect to the database");
 
     // Build layers
-    let repository = UserRepositoryImpl::new(pool);
-    let user_service: Arc<dyn UserService> = Arc::new(UserServiceImpl::new(repository));
+    let user_repository = UserRepositoryImpl::new(pool.clone());
+    let user_service: Arc<dyn UserService> = Arc::new(UserServiceImpl::new(user_repository));
+
+    let place_repository = PlaceRepositoryImpl::new(pool.clone());
+    let place_service: Arc<dyn PlaceService> = Arc::new(PlaceServiceImpl::new(place_repository));
 
     let _rocket = rocket::build()
         .manage(user_service)
+        .manage(place_service)
         .mount(
             "/",
             SwaggerUi::new("/docs/<_..>").url("/api-docs/openapi.json", ApiDoc::openapi()),
         )
         .mount("/", user_routes())
+        .mount("/", place_routes())
         .launch()
         .await?;
 
