@@ -17,6 +17,13 @@ pub trait PlaceRepository: Send + Sync {
     ) -> Result<Vec<Place>, sqlx::Error>;
 
     async fn delete(&self, place_id: Uuid) -> Result<u64, sqlx::Error>;
+
+    async fn is_taken_between(
+        &self,
+        start_date: NaiveDate,
+        end_date: NaiveDate,
+        place_id: Uuid,
+    ) -> Result<bool, sqlx::Error>;
 }
 
 pub struct PlaceRepositoryImpl {
@@ -100,5 +107,29 @@ impl PlaceRepository for PlaceRepositoryImpl {
         .await?;
 
         Ok(result.rows_affected())
+    }
+
+    async fn is_taken_between(
+        &self,
+        start_date: NaiveDate,
+        end_date: NaiveDate,
+        place_id: Uuid,
+    ) -> Result<bool, sqlx::Error> {
+        // Check if the place is available for the given dates
+        let overlapping_tickets = sqlx::query!(
+            r#"
+        SELECT 1 AS exists
+        FROM tickets
+        WHERE place_id = $1
+          AND (($2::DATE, $3::DATE) OVERLAPS (start_date, end_date))
+        "#,
+            place_id,
+            start_date,
+            end_date
+        )
+        .fetch_optional(&self.pool)
+        .await?;
+
+        Ok(overlapping_tickets.is_some())
     }
 }
