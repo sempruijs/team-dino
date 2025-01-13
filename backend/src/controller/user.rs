@@ -6,12 +6,16 @@ use rocket::futures::FutureExt;
 use rocket::get;
 use rocket::http::Status;
 use rocket::post;
+use rocket::request;
+use rocket::request::FromRequest;
 use rocket::response::status;
 use rocket::routes;
 use rocket::serde::json::Json;
+use rocket::Request;
 use rocket::State;
 use serde::Deserialize;
 use serde::Serialize;
+use std::str::FromStr;
 use std::sync::Arc;
 use utoipa::ToSchema;
 use uuid::Uuid;
@@ -27,7 +31,7 @@ pub struct CreateUserRequest {
 // Return type should later be CreateUserRepsonse
 #[utoipa::path(
     post,
-    path = "/users",
+    path = "/",
     request_body = CreateUserRequest,
     responses(
         (status = 201, description = "User created successfully", body = bool),
@@ -38,7 +42,7 @@ pub struct CreateUserRequest {
     operation_id = "createUser",
     tag = "Users"
 )]
-#[post("/users", data = "<payload>")]
+#[post("/", data = "<payload>")]
 pub async fn create_user(
     payload: Json<CreateUserRequest>,
     user_service: &State<Arc<dyn UserService>>,
@@ -73,7 +77,7 @@ struct GetUserResponse {
 // Return type should later be CreateUserRepsonse
 #[utoipa::path(
     get,
-    path = "/users",
+    path = "/",
     request_body = GetUserRequest,
     responses(
         (status = 201, description = "User recieved successfully", body = GetUserResponse),
@@ -84,37 +88,69 @@ struct GetUserResponse {
     operation_id = "createUser",
     tag = "Users"
 )]
-#[get("/users", data = "<payload>")]
+#[get("/")]
 pub async fn get_user(
-    payload: Json<GetUserRequest>,
-    user_service: &State<Arc<dyn UserService>>,
+    // user_service: &State<Arc<dyn UserService>>,
+    user: User,
 ) -> Result<Json<GetUserResponse>, status::Custom<String>> {
-    let user_id = match Uuid::parse_str(&payload.user_id) {
-        Ok(uuid) => uuid,
-        Err(_) => {
-            return Err(status::Custom(
-                Status::BadRequest,
-                "Invalid user ID".to_string(),
-            ))
-        }
-    };
+    dbg!(&user);
 
-    match user_service.from_uuid(user_id).await {
-        Ok(Some(user)) => Ok(Json(GetUserResponse {
-            email: user.email,
-            name: user.name,
-        })),
-        Ok(None) => Err(status::Custom(
-            Status::NotFound,
-            "User not found".to_string(),
-        )),
-        Err(_) => Err(status::Custom(
-            Status::InternalServerError,
-            "Internal server error".to_string(),
-        )),
-    }
+    Ok(Json(GetUserResponse {
+        email: user.email,
+        name: user.name,
+    }))
+    // let user_id = match Uuid::parse_str(&payload.user_id) {
+    //     Ok(uuid) => uuid,
+    //     Err(_) => {
+    //         return Err(status::Custom(
+    //             Status::BadRequest,
+    //             "Invalid user ID".to_string(),
+    //         ))
+    //     }
+    // };
+
+    // match user_service.from_uuid(user_id).await {
+    //     Ok(Some(user)) => Ok(Json(GetUserResponse {
+    //         email: user.email,
+    //         name: user.name,
+    //     })),
+    //     Ok(None) => Err(status::Custom(
+    //         Status::NotFound,
+    //         "User not found".to_string(),
+    //     )),
+    //     Err(_) => Err(status::Custom(
+    //         Status::InternalServerError,
+    //         "Internal server error".to_string(),
+    //     )),
+    // }
 }
 
 pub fn user_routes() -> Vec<rocket::Route> {
     routes![create_user, get_user]
+}
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for User {
+    type Error = sqlx::Error;
+
+    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
+        // TODO: read user from request
+        let user_service = request
+            .guard::<&State<Arc<dyn UserService>>>()
+            .await
+            .unwrap();
+
+        let user_id = Uuid::from_str("1b7c4ddf-50fe-425a-897a-ac1d9d04ac86").unwrap();
+        let user = user_service.from_uuid(user_id).await.unwrap().unwrap();
+
+        // User {
+        //     user_id: Uuid::new_v4(),
+        //     name: "Piet Snot".to_string(),
+        //     date_of_birth: NaiveDate::from_ymd_opt(2000, 1, 1).unwrap(),
+        //     email: "piet@snot.nl".to_string(),
+        //     password: "geheim".to_string(),
+        // }
+
+        request::Outcome::Success(user.clone())
+    }
 }
