@@ -44,7 +44,7 @@ pub struct CreateUserRequest {
     operation_id = "createUser",
     tag = "Users"
 )]
-#[post("/", data = "<payload>")]
+#[post("/users", data = "<payload>")]
 pub async fn create_user(
     payload: Json<CreateUserRequest>,
     user_service: &State<Arc<dyn UserService>>,
@@ -66,9 +66,7 @@ pub async fn create_user(
 }
 
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
-struct GetUserRequest {
-    user_id: String,
-}
+struct GetUserRequest;
 
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 struct GetUserResponse {
@@ -79,7 +77,7 @@ struct GetUserResponse {
 // Return type should later be CreateUserRepsonse
 #[utoipa::path(
     get,
-    path = "/",
+    path = "/users",
     request_body = GetUserRequest,
     responses(
         (status = 201, description = "User recieved successfully", body = GetUserResponse),
