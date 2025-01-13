@@ -16,6 +16,8 @@ pub trait UserRepository: Send + Sync {
     async fn from_uuid(&self, user_id: Uuid) -> Result<Option<User>, sqlx::Error>;
 
     async fn from_email(&self, email: String) -> Result<Option<User>, sqlx::Error>;
+
+    async fn allowed_on_date(&self, user_id: Uuid, date: NaiveDate) -> Result<bool, sqlx::Error>;
 }
 
 impl UserRepositoryImpl {
@@ -39,6 +41,26 @@ impl UserRepository for UserRepositoryImpl {
         .execute(&self.pool)
         .await?;
         Ok(())
+    }
+
+    async fn allowed_on_date(&self, user_id: Uuid, date: NaiveDate) -> Result<bool, sqlx::Error> {
+        // Query to check if a ticket exists for the given user and date range
+        let query_result = sqlx::query_scalar!(
+            r#"
+            SELECT EXISTS (
+                SELECT 1
+                FROM tickets
+                WHERE user_id = $1
+                  AND $2 BETWEEN start_date AND end_date
+            )
+            "#,
+            user_id,
+            date
+        )
+        .fetch_one(&self.pool) // Use `fetch_one` because `EXISTS` always returns one row
+        .await?;
+
+        Ok(query_result.unwrap_or(false)) // Return the result, default to false if NULL
     }
 
     async fn from_uuid(&self, user_id: Uuid) -> Result<Option<User>, sqlx::Error> {
