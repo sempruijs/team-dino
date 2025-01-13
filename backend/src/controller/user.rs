@@ -142,15 +142,28 @@ impl<'r> FromRequest<'r> for User {
             .await
             .unwrap();
 
-        match request.headers().get_one("authorization") {
-            None => Outcome::Error((Status::Unauthorized, ())),
-            Some(jwt) => match authentication_service
-                .verify_jwt(jwt, String::from("bla"))
-                .await
-            {
-                Ok(Some(user)) => request::Outcome::Success(user.clone()),
-                Ok(None) => Outcome::Error((Status::Unauthorized, ())),
-                Err(_) => Outcome::Error((Status::Unauthorized, ())),
+        dbg!("{}", request.headers().get_one("Authorization"));
+        match request.headers().get_one("Authorization") {
+            None => {
+                println!("hello");
+                Outcome::Error((Status::Unauthorized, ()))
+            }
+            Some(autherisation_header) => match autherisation_header.strip_prefix("Bearer ") {
+                None => todo!(),
+                Some(jwt) => match authentication_service
+                    .verify_jwt(jwt, String::from("bla"))
+                    .await
+                {
+                    Ok(Some(user)) => request::Outcome::Success(user.clone()),
+                    Ok(None) => {
+                        println!("hello2");
+                        Outcome::Error((Status::Unauthorized, ()))
+                    }
+                    Err(_) => {
+                        println!("hello3");
+                        Outcome::Error((Status::Unauthorized, ()))
+                    }
+                },
             },
         }
     }
