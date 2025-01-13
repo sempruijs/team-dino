@@ -94,6 +94,7 @@ impl UserRepository for UserRepositoryImpl {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct UserRepositoryImpl {
     pool: PgPool,
 }

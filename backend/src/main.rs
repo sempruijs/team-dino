@@ -1,3 +1,5 @@
+use crate::controller::authentication::authentication_routes;
+use crate::service::authentication::*;
 use crate::service::place::*;
 use dotenv::dotenv;
 use std::env;
@@ -40,19 +42,25 @@ async fn main() -> Result<(), rocket::Error> {
 
     // Build layers
     let user_repository = UserRepositoryImpl::new(pool.clone());
-    let user_service: Arc<dyn UserService> = Arc::new(UserServiceImpl::new(user_repository));
+    let user_service: Arc<dyn UserService> =
+        Arc::new(UserServiceImpl::new(user_repository.clone()));
 
     let place_repository = PlaceRepositoryImpl::new(pool.clone());
     let place_service: Arc<dyn PlaceService> = Arc::new(PlaceServiceImpl::new(place_repository));
 
+    let authentication_service: Arc<dyn AuthenticationService> =
+        Arc::new(AuthenticationServiceImpl::new(user_repository.clone()));
+
     let _rocket = rocket::build()
         .manage(user_service)
         .manage(place_service)
+        .manage(authentication_service)
         .mount(
             "/",
             SwaggerUi::new("/docs/<_..>").url("/api-docs/openapi.json", ApiDoc::openapi()),
         )
         .mount("/users", user_routes())
+        .mount("/login", authentication_routes())
         .mount("/places", place_routes())
         .launch()
         .await?;

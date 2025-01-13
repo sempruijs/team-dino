@@ -5,4 +5,5 @@
 pub mod place;
 // // pub mod routes;
 // pub mod ticket;
+pub mod authentication;
 pub mod user;

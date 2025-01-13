@@ -1,6 +1,6 @@
+pub mod authentication;
 pub mod hash;
-pub mod user;
-pub mod auth;
-pub mod place;
 pub mod license_plate;
 pub mod logging;
+pub mod place;
+pub mod user;
