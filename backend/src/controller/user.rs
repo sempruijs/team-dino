@@ -1,6 +1,7 @@
 use crate::domain::User;
 use crate::parser::*;
 use crate::service::user::UserService;
+use crate::AuthenticationService;
 use chrono::NaiveDate;
 use rocket::futures::FutureExt;
 use rocket::get;
@@ -8,6 +9,7 @@ use rocket::http::Status;
 use rocket::post;
 use rocket::request;
 use rocket::request::FromRequest;
+use rocket::request::Outcome;
 use rocket::response::status;
 use rocket::routes;
 use rocket::serde::json::Json;
@@ -131,26 +133,24 @@ pub fn user_routes() -> Vec<rocket::Route> {
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for User {
-    type Error = sqlx::Error;
+    type Error = ();
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        // TODO: read user from request
-        let user_service = request
-            .guard::<&State<Arc<dyn UserService>>>()
+        let authentication_service = request
+            .guard::<&State<Arc<dyn AuthenticationService>>>()
             .await
             .unwrap();
 
-        let user_id = Uuid::from_str("1b7c4ddf-50fe-425a-897a-ac1d9d04ac86").unwrap();
-        let user = user_service.from_uuid(user_id).await.unwrap().unwrap();
-
-        // User {
-        //     user_id: Uuid::new_v4(),
-        //     name: "Piet Snot".to_string(),
-        //     date_of_birth: NaiveDate::from_ymd_opt(2000, 1, 1).unwrap(),
-        //     email: "piet@snot.nl".to_string(),
-        //     password: "geheim".to_string(),
-        // }
-
-        request::Outcome::Success(user.clone())
+        match request.headers().get_one("authorization") {
+            None => Outcome::Error((Status::Unauthorized, ())),
+            Some(jwt) => match authentication_service
+                .verify_jwt(jwt, String::from("bla"))
+                .await
+            {
+                Ok(Some(user)) => request::Outcome::Success(user.clone()),
+                Ok(None) => Outcome::Error((Status::Unauthorized, ())),
+                Err(_) => Outcome::Error((Status::Unauthorized, ())),
+            },
+        }
     }
 }
