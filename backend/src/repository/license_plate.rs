@@ -5,7 +5,7 @@ use sqlx::PgPool;
 
 #[async_trait]
 pub trait LicensePlateRepository: Send + Sync {
-    async fn get_uuid(&self, license_plate: String) -> Result<Option<Uuid>, sqlx::Error>;
+    async fn get_user_id(&self, license_plate: String) -> Result<Option<Uuid>, sqlx::Error>;
 }
 
 pub struct LicensePlateRepositoryImpl {
@@ -14,7 +14,7 @@ pub struct LicensePlateRepositoryImpl {
 
 #[async_trait]
 impl LicensePlateRepository for LicensePlateRepositoryImpl {
-    async fn get_uuid(&self, license_plate: String) -> Result<Option<Uuid>, sqlx::Error> {
+    async fn get_user_id(&self, license_plate: String) -> Result<Option<Uuid>, sqlx::Error> {
         // Query the database for the UUID associated with the given license plate
         let query_result = sqlx::query_scalar!(
             r#"
