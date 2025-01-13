@@ -88,7 +88,10 @@ struct GetUserResponse {
     ),
     description = "Recieve user details.",
     operation_id = "createUser",
-    tag = "Users"
+    tag = "Users",
+    security(
+        ("jwt_auth" = [])
+    )
 )]
 #[get("/")]
 pub async fn get_user(
