@@ -33,7 +33,7 @@ pub struct CreateUserRequest {
 // Return type should later be CreateUserRepsonse
 #[utoipa::path(
     post,
-    path = "/",
+    path = "/users",
     request_body = CreateUserRequest,
     responses(
         (status = 201, description = "User created successfully", body = bool),
