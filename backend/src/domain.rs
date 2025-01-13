@@ -19,3 +19,12 @@ pub struct Place {
     pub place_id: Uuid,
     pub house_number: i32,
 }
+
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct Ticket {
+    pub ticket_id: Uuid,
+    pub user_id: Uuid,
+    pub start_date: NaiveDate,
+    pub end_date: NaiveDate,
+    pub place_id: Uuid,
+}
