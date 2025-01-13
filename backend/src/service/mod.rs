@@ -1,4 +1,5 @@
 pub mod hash;
 pub mod user;
 pub mod place;
+pub mod license_plate;
 pub mod logging;
