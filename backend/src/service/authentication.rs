@@ -1,14 +1,15 @@
 // use crate::repository::user::*;
-use uuid::Uuid;
+use crate::domain::User;
+use std::str::FromStr;
 // use crate::service::hash::*;
+use crate::repository::user::UserRepository;
 use chrono::{Duration, Utc};
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use jsonwebtoken::{encode, EncodingKey, Header};
 use rocket::async_trait;
 use serde::Deserialize;
 use serde::Serialize;
-
-use crate::repository::user::UserRepository;
+use uuid::{uuid, Uuid};
 // use sqlx::PgPool;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -25,6 +26,8 @@ pub trait AuthenticationService: Send + Sync {
         password: String,
         secret: String,
     ) -> Result<Option<String>, sqlx::Error>;
+
+    async fn verify_jwt(&self, token: &str, secret: String) -> Result<Option<User>, sqlx::Error>;
 }
 
 pub struct AuthenticationServiceImpl<U: UserRepository> {
@@ -54,6 +57,23 @@ impl<U: UserRepository> AuthenticationService for AuthenticationServiceImpl<U> {
         match user.password == password {
             true => Ok(generate_jwt(user.user_id, secret)?),
             false => Ok(None),
+        }
+    }
+
+    async fn verify_jwt(&self, token: &str, secret: String) -> Result<Option<User>, sqlx::Error> {
+        let claims = decode::<Claims>(
+            token,
+            &DecodingKey::from_secret(secret.as_bytes()),
+            &Validation::default(),
+        )
+        .map(|data| data.claims);
+
+        match claims {
+            Ok(claims) => Ok(self
+                .user_repository
+                .from_uuid(Uuid::from_str(&claims.user_id).expect("Failed to generate uuid."))
+                .await?),
+            Err(_) => Ok(None),
         }
     }
 }
