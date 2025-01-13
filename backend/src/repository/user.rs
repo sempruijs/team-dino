@@ -14,6 +14,8 @@ pub trait UserRepository: Send + Sync {
     async fn create(&self, user: User) -> Result<(), sqlx::Error>;
 
     async fn from_uuid(&self, user_id: Uuid) -> Result<Option<User>, sqlx::Error>;
+
+    async fn from_email(&self, email: String) -> Result<Option<User>, sqlx::Error>;
 }
 
 impl UserRepositoryImpl {
@@ -50,6 +52,23 @@ impl UserRepository for UserRepositoryImpl {
         .fetch_optional(&self.pool)
         .await?;
         Ok(user)
+    }
+
+    async fn from_email(&self, email: String) -> Result<Option<User>, sqlx::Error> {
+        // Query the database for a user by email
+        let query_result = sqlx::query_as!(
+            User,
+            r#"
+            SELECT user_id, name, date_of_birth, email, password
+            FROM users
+            WHERE email = $1
+            "#,
+            email
+        )
+        .fetch_optional(&self.pool) // Use `fetch_optional` to get an Option<User>
+        .await?;
+
+        Ok(query_result)
     }
 }
 
