@@ -29,16 +29,6 @@ pub mod repository;
 pub mod service;
 pub mod traits;
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
-
-#[get("/hello")]
-fn hello() -> &'static str {
-    "Hello, saas!"
-}
-
 #[rocket::main]
 async fn main() -> Result<(), rocket::Error> {
     // Read the database path from enviousment variables.
