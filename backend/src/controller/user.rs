@@ -149,7 +149,7 @@ impl<'r> FromRequest<'r> for User {
                 Outcome::Error((Status::Unauthorized, ()))
             }
             Some(autherisation_header) => match autherisation_header.strip_prefix("Bearer ") {
-                None => todo!(),
+                None => Outcome::Error((Status::Unauthorized, ())),
                 Some(jwt) => match authentication_service
                     .verify_jwt(jwt, String::from("bla"))
                     .await
