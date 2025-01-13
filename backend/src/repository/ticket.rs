@@ -38,7 +38,19 @@ impl TicketRepository for TicketRepositoryImpl {
     }
 
     async fn get(&self, user_id: Uuid) -> Result<Vec<Ticket>, sqlx::Error> {
-        todo!()
+        let tickets = sqlx::query_as!(
+            Ticket,
+            r#"
+        SELECT ticket_id, user_id, start_date, end_date, place_id
+        FROM tickets
+        WHERE user_id = $1
+        "#,
+            user_id
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        Ok(tickets)
     }
 }
 
